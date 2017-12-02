@@ -1,0 +1,9 @@
+[submodule "ProjectMetis"]
+	path = ProjectMetis
+	url = git@github.com:aminnj/ProjectMetis.git
+[submodule "rooutil"]
+	path = rooutil
+	url = git@github.com:sgnoohc/rooutil.git
+[submodule "scripts"]
+	path = scripts
+	url = git@github.com:sgnoohc/scripts.git

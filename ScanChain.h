@@ -5,8 +5,8 @@
 #include "rooutil/looper.h"
 #include "rooutil/autohist.h"
 #include "rooutil/ttreex.h"
+#include "rooutil/dorky.h"
 #include "pu_weights.h"
-#include "CORE/Tools/dorky/dorky.h"
 
 #include "LeptonTree.cc"
 
@@ -48,9 +48,11 @@ struct Lepton
     bool pass_e17i;
     bool pass_m17i;
     int motherID;
+    bool isQCD;
     bool isEWK;
     bool isData;
     bool isDoubleMuon;
+    float reliso;
 
     void print()
     {

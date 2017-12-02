@@ -12,17 +12,17 @@ import sys
 import os
 
 # Configurations
-job_tag = "fr_v2"
-exec_path = "../scripts/run.sh"
+job_tag = "fr_ptratio_study_v1"
+exec_path = "scripts/run.sh"
 tar_path = "package.tar.gz"
 hadoop_path = "metis/fr/{}".format(job_tag)
 args = "-c ScanChain.C output.root t -1 dummy" # dummy arguments are there because the executable run.sh was copied from another framework.
 
 # Get into the directory where this lepmetis.py sits. So we can tar up the condor package.
-os.system("tar -cf package.tar LeptonTree.cc LeptonTree.h ScanChain.C ScanChain.h pu_weights.h ../rooutil/*.so ../*/*.h ../CORE/Tools/dorky/dorky.h")
-os.chdir("../scripts")
-os.system("tar -rf ../FakeRate/package.tar *.sh *.C ")
-os.chdir("../FakeRate")
+os.system("tar -cf package.tar LeptonTree.cc LeptonTree.h ScanChain.C ScanChain.h pu_weights.h rooutil/*.so rooutil/*.h")
+os.chdir("scripts")
+os.system("tar -rf ../package.tar *.sh *.C ")
+os.chdir("../")
 os.system("gzip -f package.tar")
 
 dslocs = [
@@ -106,6 +106,6 @@ while True:
         print "Job={} finished".format(job_tag)
         print ""
         break
-    print "Sleeping 300 seconds ..."
-    time.sleep(300)
+    print "Sleeping 30 seconds ..."
+    time.sleep(30)
 
