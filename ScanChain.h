@@ -1,5 +1,6 @@
 // ROOT
 #include "Math/VectorUtil.h"
+#include "TVector2.h"
 
 // SNT
 #include "rooutil/looper.h"
@@ -7,6 +8,8 @@
 #include "rooutil/ttreex.h"
 #include "rooutil/dorky.h"
 #include "pu_weights.h"
+
+#include "TString.h"
 
 #include "LeptonTree.cc"
 
@@ -49,10 +52,13 @@ struct Lepton
     bool pass_m17i;
     int motherID;
     bool isQCD;
+    bool isTTbar;
     bool isEWK;
     bool isData;
     bool isDoubleMuon;
     float reliso;
+    float ptratio;
+    float ip3d;
 
     void print()
     {

@@ -92,12 +92,13 @@ def rebin2d(hist, name):
 # Currently only the "ptvarbin" variable and "met" is being rebinned to do some "studies".
 #
 def rebin2d_2dmu(hist, name):
-    val = hist.GetBinContent( 4, 3 ) + hist.GetBinContent( 4, 2 )
-    err = quadsum( [ hist.GetBinError( 4, 3 ), hist.GetBinError( 4, 2 ) ] )
-    hist.SetBinContent( 4, 3, val )
-    hist.SetBinContent( 4, 2, val )
-    hist.SetBinError( 4, 3, err )
-    hist.SetBinError( 4, 2, err )
+    ix = 7
+    val = hist.GetBinContent( ix, 3 ) + hist.GetBinContent( ix, 2 )
+    err = quadsum( [ hist.GetBinError( ix, 3 ), hist.GetBinError( ix, 2 ) ] )
+    hist.SetBinContent( ix, 3, val )
+    hist.SetBinContent( ix, 2, val )
+    hist.SetBinError( ix, 3, err )
+    hist.SetBinError( ix, 2, err )
     return hist
 
 ####################################################################################################
@@ -110,7 +111,7 @@ def rebin2d_2dmu(hist, name):
 ###################################################################################################
 # Plot 1D distribution (default : data, W, DY. optional : add QCD, or ttbar)
 #
-def draw(histname, varname, extraopt="", scale=1.00):
+def draw(histname, varname, extraopt="", scale=1.00, printcontent=False):
 
     # Get histograms
     histo__data = tfile_data .Get(histname).Clone("Data")
@@ -150,6 +151,18 @@ def draw(histname, varname, extraopt="", scale=1.00):
     v_bkg_hists.push_back(histo__ttbar)
     if addvv: v_bkg_hists.push_back(histo__vv)
     if addqcd: v_bkg_hists.push_back(histo__qcd)
+
+    #if printcontent:
+    #    totalbkg = r.getTotalBkgHists(v_bkg_hists)
+    #    totalbkg.Rebin(4)
+    #    totalbkg.Print("all")
+    #    #for hbg in v_bkg_hists:
+    #    #    hbg.Print("all")
+    #    histo__data.Rebin(4)
+    #    histo__data.Print("all")
+    #    b = totalbkg.GetBinContent(3) + totalbkg.GetBinContent(4) + totalbkg.GetBinContent(5)
+    #    d = histo__data.GetBinContent(3) + histo__data.GetBinContent(4) + histo__data.GetBinContent(5)
+    #    print b, d
 
     # Run the plot and return ratio plot
     # The plotmaker function returns the data/MC ratio TH1 created during the plotting process.
@@ -215,6 +228,10 @@ def draw_fakerate_mu(extraopt="", scale=1.0):
 
     v_bkg_hists = r.vector("TH1*")()
     v_bkg_hists.push_back(histo__tight)
+
+    #print "HERE2"
+    histo__tight.Print("all")
+    histo__loose.Print("all")
 
     # Run the plot and return ratio plot
     # The plotmaker function returns the data/MC ratio TH1 created during the plotting process.
@@ -309,11 +326,11 @@ def draw_nvtxrewgt_fakerate_el(extraopt="", scale=1.0):
 ###################################################################################################
 # Plot 1D distribution (default : data, W, DY. optional : add QCD, or ttbar)
 #
-def draw_nvtxrewgt_fakerate_mu(extraopt="", scale=1.0):
+def draw_nvtxrewgt_fakerate_mu(extraopt="", scale=1.0, tightname="evt_lvl_nvtxrewgt_histo_conecorrptvarbin_meas_mu", loosename="evt_lvl_nvtxrewgt_histo_conecorrptvarbin_loose_meas_mu", outputname="fakerate_nvtxrewgt_mu_data"):
     global prefix
     print "hereHEREHREHREH", prefix
 
-    histname = prefix + "evt_lvl_nvtxrewgt_histo_conecorrptvarbin_meas_mu"
+    histname = prefix + tightname
 
     # Get histograms
     histo__tight = rebin( tfile_data .Get(histname).Clone("Tight"), histname )
@@ -333,7 +350,7 @@ def draw_nvtxrewgt_fakerate_mu(extraopt="", scale=1.0):
     histo__tight.SetLineColor( 1 )
     histo__tight.SetFillColor( r.kGray + 1 )
 
-    histname = prefix + "evt_lvl_nvtxrewgt_histo_conecorrptvarbin_loose_meas_mu"
+    histname = prefix + loosename
 
     # Get histograms
     histo__loose = rebin( tfile_data .Get(histname).Clone("Loose"), histname )
@@ -363,7 +380,7 @@ def draw_nvtxrewgt_fakerate_mu(extraopt="", scale=1.0):
     return r.plotmaker( """
                   --yTitle N leptons
                   --xTitle p^{corr}_{T,#mu} [GeV]
-                  --plotOutputName plots/%sfakerate_nvtxrewgt_mu_data
+                  --plotOutputName plots/%s%s
                   --ratio_DrawOpt ep
                   --ratio_Maximum 0.27
                   --ratio_Minimum 0.0
@@ -375,7 +392,7 @@ def draw_nvtxrewgt_fakerate_mu(extraopt="", scale=1.0):
                   %s
                   --MaximumMultiplier 6
                   --autoStack
-                  """%(prefix, extraopt) ,
+                  """%(prefix, outputname, extraopt) ,
                   histo__loose, v_bkg_hists )
 
 ###################################################################################################
@@ -448,10 +465,10 @@ def draw_fakerate_el(extraopt="", scale=1.0):
 ###################################################################################################
 # Plot 1D distribution (default : data, W, DY. optional : add QCD, or ttbar)
 #
-def draw_fakerate_qcd_mu(extraopt=""):
+def draw_fakerate_qcd_mu(extraopt="", tightname="evt_lvl_histo_conecorrptvarbin_meas_mu", loosename="evt_lvl_histo_conecorrptvarbin_loose_meas_mu", outputname="fakerate_mu_qcd"):
     global prefix
 
-    histname = "evt_lvl_histo_conecorrptvarbin_meas_mu"
+    histname = tightname
 
     # Get histograms
     histo__tight = rebin( tfile_qcd_mu .Get(histname).Clone("Tight"), histname )
@@ -459,7 +476,7 @@ def draw_fakerate_qcd_mu(extraopt=""):
     histo__tight.SetLineColor( 1 )
     histo__tight.SetFillColor( r.kYellow )
 
-    histname = "evt_lvl_histo_conecorrptvarbin_loose_meas_mu"
+    histname = loosename
 
     # Get histograms
     histo__loose = rebin( tfile_qcd_mu .Get(histname).Clone("Loose"), histname )
@@ -470,21 +487,26 @@ def draw_fakerate_qcd_mu(extraopt=""):
     v_bkg_hists = r.vector("TH1*")()
     v_bkg_hists.push_back(histo__tight)
 
+    print "HERE1"
+    histo__tight.Print("all")
+    histo__loose.Print("all")
+
     # Run the plot and return ratio plot
     # The plotmaker function returns the data/MC ratio TH1 created during the plotting process.
     return r.plotmaker( """
                   --yTitle N leptons
                   --xTitle p^{corr}_{T,#mu} [GeV]
-                  --plotOutputName plots/fakerate_mu_qcd
+                  --plotOutputName plots/%s
                   --ratio_DrawOpt ep
                   --ratio_Maximum 0.27
                   --ratio_Minimum 0.0
                   --reverseRatio
                   --showOverflow
+                  --divideByBinWidth
                   %s
                   --MaximumMultiplier 6
                   --autoStack
-                  """%(extraopt) ,
+                  """%(outputname, extraopt) ,
                   histo__loose, v_bkg_hists )
 
 ###################################################################################################
@@ -592,7 +614,7 @@ def draw_nvtxrewgt_fakerate_mu_2d(extraopt="", scale=1.0):
     ratio.SetMaximum(0.5)
     ratio.SetMinimum(-0.15)
     ratio.SetMarkerColor(1)
-    ratio.SetMarkerSize(0.8)
+    ratio.SetMarkerSize(0.3)
     ratio.SetContour(100)
     ratio.GetXaxis().SetMoreLogLabels()
     ratio.Draw( "colztexte" )
@@ -798,6 +820,7 @@ def main() :
     draw("histo_nowgt_pt_el", "p_{T,e} [GeV]", "--xNbin 200 --saveMainPad --legendOnMainPad --Minimum 100 --reverseRatio" )
     draw("histo_nowgt_pt_mu", "p_{T,#mu} [GeV]", "--xNbin 200 --saveMainPad --legendOnMainPad --Minimum 100 --reverseRatio" )
 
+    draw(prefix + "evt_lvl_histo_nvtx_highpt50_mu", "N_{vtx} (#mu events)", "--saveMainPad --legendOnMainPad --legendOnMainPad --xNbin 1" )[0].Print("all")
     draw(prefix + "evt_lvl_histo_nvtx_highpt50_el", "N_{vtx} (e events)", "--saveMainPad --legendOnMainPad --legendOnMainPad" )[0].Print("all")
     draw(prefix + "evt_lvl_histo_nvtx_highpt50_mu", "N_{vtx} (#mu events)", "--saveMainPad --legendOnMainPad --legendOnMainPad" )[0].Print("all")
 
@@ -805,19 +828,57 @@ def main() :
     draw(prefix + "evt_lvl_nvtxrewgt_histo_nvtx_highpt50_mu", "N_{vtx} (#mu events)", "--saveMainPad --legendOnMainPad --legendOnMainPad"  )[0].Print("all")
 
     f = r.TFile( "plots/fakerate_pt_v_eta.root", "recreate" )
-    sf_nonrewgt_mu = draw("evt_lvl_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--printBkg --xNbin 5" )[0].GetBinContent( 3 )
-    sf_nonrewgt_mu_syst1 = draw("syst13_evt_lvl_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
-    sf_nonrewgt_mu_syst2 = draw("syst14_evt_lvl_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+    #sf_nonrewgt_mu = draw("evt_lvl_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--printBkg --xNbin 5" )[0].GetBinContent( 3 )
+    #sf_nonrewgt_mu_syst1 = draw("syst13_evt_lvl_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+    #sf_nonrewgt_mu_syst2 = draw("syst14_evt_lvl_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
 
-    sf_nonrewgt_el = draw("evt_lvl_histo_mt_cr_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
-    sf_nonrewgt_el_syst1 = draw("syst13_evt_lvl_histo_mt_cr_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
-    sf_nonrewgt_el_syst2 = draw("syst14_evt_lvl_histo_mt_cr_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+    #sf_nonrewgt_el = draw("evt_lvl_histo_mt_cr_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+    #sf_nonrewgt_el_syst1 = draw("syst13_evt_lvl_histo_mt_cr_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+    #sf_nonrewgt_el_syst2 = draw("syst14_evt_lvl_histo_mt_cr_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
     #print sf_nonrewgt_mu, sf_nonrewgt_mu_syst1, sf_nonrewgt_mu_syst2
     #print sf_nonrewgt_el, sf_nonrewgt_el_syst1, sf_nonrewgt_el_syst2
 
-    sf_mu = draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
-    sf_mu_syst1 = draw("syst13_evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
-    sf_mu_syst2 = draw("syst14_evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+#    draw("evt_lvl_nvtxrewgt_histo_nvtx_cr_mu_0", "nvtx", "" )[0].GetBinContent( 3 )
+#    draw("evt_lvl_nvtxrewgt_histo_nvtx_cr_mu_1", "nvtx", "" )[0].GetBinContent( 3 )
+#    draw("evt_lvl_nvtxrewgt_histo_nvtx_cr_mu_2", "nvtx", "" )[0].GetBinContent( 3 )
+#    draw("evt_lvl_nvtxrewgt_histo_nvtx_cr_mu_3", "nvtx", "" )[0].GetBinContent( 3 )
+#    draw("evt_lvl_nvtxrewgt_histo_nvtx_cr_mu_4", "nvtx", "" )[0].GetBinContent( 3 )
+#
+#    sf_mu_0 = draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu_0", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+#    sf_mu_1 = draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu_1", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+#    sf_mu_2 = draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu_2", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+#    sf_mu_3 = draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu_3", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+#    sf_mu_4 = draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu_4", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+#    print "sf_mu individ ", sf_mu_0, sf_mu_1, sf_mu_2, sf_mu_3, sf_mu_4
+
+    #sf_mu = draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+    #sf_mu_syst1 = draw("syst13_evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+    #sf_mu_syst2 = draw("syst14_evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+
+#    print "HEREHEREHERE2"
+#    sf_mu = draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 4 )
+#    sf_mu_syst1 = draw("syst13_evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 4 )
+#    sf_mu_syst2 = draw("syst14_evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 4 )
+
+    print "HEREHEREHERE2"
+    sf_mu = draw("evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 3 )
+    sf_mu_syst1 = draw("syst13_evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 3 )
+    sf_mu_syst2 = draw("syst14_evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 3 )
+
+    #print "HEREHEREHERE2"
+    #sf_mu = draw("evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 1", printcontent=True )[0].GetBinContent( 1 )
+    #sf_mu_syst1 = draw("syst13_evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 1", printcontent=True )[0].GetBinContent( 1 )
+    #sf_mu_syst2 = draw("syst14_evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 1", printcontent=True )[0].GetBinContent( 1 )
+
+    #sf_mu = 1.10000
+
+    #print "HEREHEREHERE2"
+    #sf_mu = draw("evt_lvl_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 3 )
+    #sf_mu_syst1 = draw("syst13_evt_lvl_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 3 )
+    #sf_mu_syst2 = draw("syst14_evt_lvl_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 3 )
+
+    #print sf_mu, sf_mu_syst2, sf_mu_syst1
+    #sf_mu = 1.21891299696
 
     sf_el = draw("evt_lvl_nvtxrewgt_histo_mt_cr_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
     sf_el_syst1 = draw("syst13_evt_lvl_nvtxrewgt_histo_mt_cr_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
@@ -838,6 +899,15 @@ def main() :
     draw("evt_lvl_histo_mt_lowmet_el", "m_{T,e} [GeV]", "" )
     draw("syst13_evt_lvl_histo_mt_lowmet_el", "m_{T,e} [GeV]", "" )
     draw("syst14_evt_lvl_histo_mt_lowmet_el", "m_{T,e} [GeV]", "" )
+
+    draw("evt_lvl_nvtxrewgt_histo_pt_cr_mu", "p_{T,#mu} [GeV]", "--legendOnMainPad --saveMainPad" )
+    draw("evt_lvl_nvtxrewgt_histo_pt_loose_cr_mu", "p_{T,#mu} [GeV]", "--legendOnMainPad --saveMainPad" )
+    draw("evt_lvl_nvtxrewgt_histo_ptratio_loose_cr_mu", "p_{T,ratio #mu} [GeV]", "--legendOnMainPad --saveMainPad" )
+    draw("evt_lvl_nvtxrewgt_histo_reliso_loose_cr_mu", "reliso", "--legendOnMainPad --saveMainPad" )
+    draw("evt_lvl_nvtxrewgt_histo_mt_loose_cr_mu", "m_{T,#mu} [GeV]", "--legendOnMainPad --saveMainPad" )
+    draw("evt_lvl_nvtxrewgt_histo_met_loose_cr_mu", "MET [GeV]", "--legendOnMainPad --saveMainPad" )
+    draw("evt_lvl_nvtxrewgt_histo_nvtx_loose_cr_mu", "nvtx", "--legendOnMainPad --saveMainPad" )
+    draw("evt_lvl_nvtxrewgt_histo_conecorrptvarbin_fine_meas_mu", "p^{corr}_{T,#mu} [GeV]" , "--data_DrawOpt ep --divideByBinWidth --saveMainPad --legendOnMainPad --Minimum 0 --Maximum 50000 --reverseRatio" , sf_mu)
 
     draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--legendOnMainPad --saveMainPad" )
     draw("syst13_evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "" )
@@ -860,12 +930,16 @@ def main() :
     draw("evt_lvl_nvtxrewgt_histo_conecorrptvarbin_meas_el"       , "p^{corr}_{T,e} [GeV]"   , "--data_DrawOpt ep --divideByBinWidth --saveMainPad --legendOnMainPad --Minimum 100 --reverseRatio" , sf_el)
     draw("evt_lvl_nvtxrewgt_histo_conecorrptvarbin_meas_mu"       , "p^{corr}_{T,#mu} [GeV]" , "--data_DrawOpt ep --divideByBinWidth --saveMainPad --legendOnMainPad --Minimum 100 --reverseRatio" , sf_mu)
 
+    #fakerate_nvtxrewgt_mu_data = draw_nvtxrewgt_fakerate_mu( "--legendOnMainPad --data_DrawOpt ep --onlyLog --onlyLog", sf_mu, "evt_lvl_nvtxrewgt_histo_conecorrptvarbin_fine_meas_mu", "evt_lvl_nvtxrewgt_histo_conecorrptvarbin_fine_loose_meas_mu", "fakerate_nvtxrewgt_fine_mu_data")
     fakerate_nvtxrewgt_mu_data = draw_nvtxrewgt_fakerate_mu( "--legendOnMainPad --data_DrawOpt ep --onlyLog --onlyLog", sf_mu)
+    #fakerate_nvtxrewgt_mu_data = draw_fakerate_mu( "--legendOnMainPad --data_DrawOpt ep --onlyLog --onlyLog", sf_mu)
     prefix = "syst13_"
     fakerate_nvtxrewgt_mu_data_syst1 = draw_nvtxrewgt_fakerate_mu("--onlyLog --plotOutputName plots/fakerate_nvtxrewgt_mu_data_syst1", sf_mu_syst1)
+    #fakerate_nvtxrewgt_mu_data_syst1 = draw_fakerate_mu("--onlyLog --plotOutputName plots/fakerate_nvtxrewgt_mu_data_syst1", sf_mu_syst1)
     #fakerate_nvtxrewgt_mu_data_syst1 = draw_nvtxrewgt_fakerate_mu("--onlyLog --plotOutputName plots/fakerate_nvtxrewgt_mu_data_syst1", sf_mu * 1.0750804349)
     prefix = "syst14_"
     fakerate_nvtxrewgt_mu_data_syst2 = draw_nvtxrewgt_fakerate_mu("--onlyLog --plotOutputName plots/fakerate_nvtxrewgt_mu_data_syst2", sf_mu_syst2)
+    #fakerate_nvtxrewgt_mu_data_syst2 = draw_fakerate_mu("--onlyLog --plotOutputName plots/fakerate_nvtxrewgt_mu_data_syst2", sf_mu_syst2)
     #fakerate_nvtxrewgt_mu_data_syst2 = draw_nvtxrewgt_fakerate_mu("--onlyLog --plotOutputName plots/fakerate_nvtxrewgt_mu_data_syst2", sf_mu * 0.9266846409)
     prefix = ""
     fakerate_nvtxrewgt_el_data = draw_nvtxrewgt_fakerate_el("--legendOnMainPad --data_DrawOpt ep --onlyLog --onlyLog", sf_el)
@@ -918,9 +992,9 @@ def main() :
                   --xTitle p^{corr}_{T,#mu} [GeV]
                   --plotOutputName plots/fakerate_nvtxrewgt_mu_full
                   --ratio_DrawOpt ep
-                  --ratio_Maximum 2.00
+                  --ratio_Maximum 2.50
                   --ratio_Minimum 0.0
-                  --Maximum 0.32
+                  --Maximum 0.15
                   --printYieldsTable
                   --autoStack
                   --systByDiff
@@ -1031,7 +1105,7 @@ def main() :
     fakerate_mu_2d.SetMaximum(0.7)
     fakerate_mu_2d.SetMinimum(-0.15)
     fakerate_mu_2d.SetMarkerColor(1)
-    fakerate_mu_2d.SetMarkerSize(1.8)
+    fakerate_mu_2d.SetMarkerSize(0.8)
     fakerate_mu_2d.SetContour(100)
     fakerate_mu_2d.GetXaxis().SetMoreLogLabels()
     fakerate_mu_2d.GetYaxis().SetNdivisions(605)
@@ -1191,4 +1265,27 @@ if __name__ == "__main__":
 
     prefix = ""
     main()
+    #sf_mu = draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 4", printcontent=True )[0].GetBinContent( 2 )
 
+    #draw("evt_lvl_histo_met_mtwindow_mu", "test" , "--ratio_Maximum 0.02 --ratio_Minimum 0")
+    #draw("evt_lvl_histo_nvtx_mtwindow_mu", "test" , "--ratio_Maximum 0.02 --ratio_Minimum 0")[0].Print("all")
+
+    #draw("evt_lvl_histo_deltaphi_meas2_mu", "test" , "")[0].Print("all")
+    #draw("evt_lvl_histo_met_meas2_mu", "test" , "")[0].Print("all")
+    #draw("evt_lvl_histo_mt_meas2_mu", "test" , "")[0].Print("all")
+    draw("evt_lvl_nvtxrewgt_histo_deltaphi_meas2_mu", "test" , "")[0].Print("all")
+    draw("evt_lvl_nvtxrewgt_histo_deltaphi_meas2_mu", "test" , "--xNbin 2")[0].Print("all")
+    draw("evt_lvl_nvtxrewgt_histo_met_meas2_mu", "test" , "")[0].Print("all")
+    draw("evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "test" , "")[0].Print("all")
+    #draw("evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "test" , "--xNbin 5")[0].Print("all")
+    #draw("syst13_evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "test" , "--xNbin 5")[0].Print("all")
+    #draw("syst14_evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "test" , "--xNbin 5")[0].Print("all")
+    #draw("evt_lvl_histo_mt_meas2_mu", "test" , "--xNbin 5")[0].Print("all")
+    #draw("syst13_evt_lvl_histo_mt_meas2_mu", "test" , "--xNbin 5")[0].Print("all")
+    #draw("syst14_evt_lvl_histo_mt_meas2_mu", "test" , "--xNbin 5")[0].Print("all")
+
+    #draw_fakerate_qcd_mu("--saveMainPad --legendOnMainPad --data_DrawOpt ep --onlyLog --onlyLog", "evt_lvl_nvtxrewgt_histo_conecorrptvarbin_fine_meas_mu", "evt_lvl_nvtxrewgt_histo_conecorrptvarbin_fine_loose_meas_mu", "fakerate_mu_fine_qcd")
+    #fakerate_nvtxrewgt_mu_data = draw_nvtxrewgt_fakerate_mu( "--legendOnMainPad --data_DrawOpt ep --onlyLog --onlyLog", 1.06, "evt_lvl_nvtxrewgt_histo_conecorrptvarbin_meas_mu", "evt_lvl_nvtxrewgt_histo_conecorrptvarbin_loose_meas_mu", "fakerate_nvtxrewgt_mu_data")
+    #fakerate_nvtxrewgt_mu_data = draw_nvtxrewgt_fakerate_mu( "--legendOnMainPad --data_DrawOpt ep --onlyLog --onlyLog", 1.05, "evt_lvl_nvtxrewgt_histo_conecorrpt_meas_mu", "evt_lvl_nvtxrewgt_histo_conecorrpt_loose_meas_mu", "fakerate_nvtxrewgt_regbin_mu_data")
+
+    #draw("evt_lvl_nvtxrewgt_histo_conecorrptvarbin_fine_meas_mu", "p^{corr}_{T,#mu} [GeV]" , "--data_DrawOpt ep --divideByBinWidth --saveMainPad --legendOnMainPad --Minimum 0 --Maximum 50000 --reverseRatio" , 1)
