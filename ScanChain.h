@@ -90,7 +90,6 @@ void fill(RooUtil::AutoHist& hists, TString suffix, float& evt_mt, float& evt_me
 void fillFakeRateHistograms(RooUtil::AutoHist& hists, TString label, float& evt_met, float& evt_mt, float& weight);
 void fillEventLevelHistograms(std::vector<Lepton>& leptons, RooUtil::AutoHist& hists);
 void fillEventLevelHistogramsSyst(std::vector<Lepton> leptons, RooUtil::AutoHist& hists, int njets, float evt_met, float evt_metPhi, float evt_mt, int iwgt, TString);
+void fillEventLevelHistogramsSyst_v1(std::vector<Lepton> leptons, RooUtil::AutoHist& hists, int njets, float evt_met, float evt_metPhi, float evt_mt, int iwgt, TString);
 
-double nvtxRewgtMu(Lepton&);
-double nvtxRewgtEl(Lepton&);
-double nvtxRewgt(int nvtx);
+#include "nvtxreweight.h"

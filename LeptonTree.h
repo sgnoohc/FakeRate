@@ -1,6 +1,6 @@
 // -*- C++ -*-
 // This is a header file generated with the command:
-// makeCMS3ClassFiles("/hadoop/cms/store/user/phchang/metis/lepbaby/2016_fakerate_sample_v2/TTbar_2016_fakerate_sample_v2/merged_1.root", "t", "LeptonTree", "LeptonTreeNameSpace", "lepton_tree")
+// makeCMS3ClassFiles("/hadoop/cms/store/user/phchang/metis/lepbaby/2016_fakerate_sample_v8/TTbar_2016_fakerate_sample_v8/merged_1.root", "t", "LeptonTree", "LeptonTreeNameSpace", "lepton_tree")
 
 #ifndef LeptonTree_H
 #define LeptonTree_H
@@ -205,6 +205,12 @@ class LeptonTree {
   float    RelIso03EA_;
   TBranch *RelIso03EA_branch;
   bool     RelIso03EA_isLoaded;
+  float    RelIso03EAv2_;
+  TBranch *RelIso03EAv2_branch;
+  bool     RelIso03EAv2_isLoaded;
+  float    RelIso04EAv2_;
+  TBranch *RelIso04EAv2_branch;
+  bool     RelIso04EAv2_isLoaded;
   float    tag_RelIso03EA_;
   TBranch *tag_RelIso03EA_branch;
   bool     tag_RelIso03EA_isLoaded;
@@ -664,6 +670,12 @@ class LeptonTree {
   float    segmCompatibility_;
   TBranch *segmCompatibility_branch;
   bool     segmCompatibility_isLoaded;
+  float    ptErr_;
+  TBranch *ptErr_branch;
+  bool     ptErr_isLoaded;
+  float    trk_pt_;
+  TBranch *trk_pt_branch;
+  bool     trk_pt_isLoaded;
   int      HLT_Mu8_;
   TBranch *HLT_Mu8_branch;
   bool     HLT_Mu8_isLoaded;
@@ -697,18 +709,12 @@ class LeptonTree {
   int      HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_;
   TBranch *HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch;
   bool     HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_isLoaded;
-  int      HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_;
-  TBranch *HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch;
-  bool     HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_isLoaded;
-  int      HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_;
-  TBranch *HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch;
-  bool     HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_isLoaded;
-  int      HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_;
-  TBranch *HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch;
-  bool     HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_isLoaded;
-  int      HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_;
-  TBranch *HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch;
-  bool     HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_isLoaded;
+  int      HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_;
+  TBranch *HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch;
+  bool     HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_isLoaded;
+  int      HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_;
+  TBranch *HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch;
+  bool     HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_isLoaded;
   int      HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_;
   TBranch *HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch;
   bool     HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_isLoaded;
@@ -829,12 +835,6 @@ class LeptonTree {
   int      HLT_Ele115_CaloIdVT_GsfTrkIdT_;
   TBranch *HLT_Ele115_CaloIdVT_GsfTrkIdT_branch;
   bool     HLT_Ele115_CaloIdVT_GsfTrkIdT_isLoaded;
-  int      HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_;
-  TBranch *HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch;
-  bool     HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_isLoaded;
-  int      HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_;
-  TBranch *HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch;
-  bool     HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_isLoaded;
   int      HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1_;
   TBranch *HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1_branch;
   bool     HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1_isLoaded;
@@ -960,6 +960,8 @@ void LoadAllBranches();
   const int &mc_id();
   const float &RelIso03();
   const float &RelIso03EA();
+  const float &RelIso03EAv2();
+  const float &RelIso04EAv2();
   const float &tag_RelIso03EA();
   const float &RelIso03DB();
   const float &pfChargedHadronIso();
@@ -1113,6 +1115,8 @@ void LoadAllBranches();
   const int &validHits();
   const int &lostHits();
   const float &segmCompatibility();
+  const float &ptErr();
+  const float &trk_pt();
   const int &HLT_Mu8();
   const int &HLT_Mu17();
   const int &HLT_Mu8_TrkIsoVVL();
@@ -1124,10 +1128,8 @@ void LoadAllBranches();
   const int &HLT_TkMu50();
   const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
   const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg();
-  const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg();
-  const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg();
-  const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg();
-  const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg();
+  const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
+  const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg();
   const int &HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
   const int &HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg();
   const int &HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
@@ -1168,8 +1170,6 @@ void LoadAllBranches();
   const int &HLT_Ele32_eta2p1_WPTight_Gsf();
   const int &HLT_Ele105_CaloIdVT_GsfTrkIdT();
   const int &HLT_Ele115_CaloIdVT_GsfTrkIdT();
-  const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg();
-  const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
   const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1();
   const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL();
   const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1();
@@ -1260,6 +1260,8 @@ namespace LeptonTreeNameSpace {
   const int &mc_id();
   const float &RelIso03();
   const float &RelIso03EA();
+  const float &RelIso03EAv2();
+  const float &RelIso04EAv2();
   const float &tag_RelIso03EA();
   const float &RelIso03DB();
   const float &pfChargedHadronIso();
@@ -1413,6 +1415,8 @@ namespace LeptonTreeNameSpace {
   const int &validHits();
   const int &lostHits();
   const float &segmCompatibility();
+  const float &ptErr();
+  const float &trk_pt();
   const int &HLT_Mu8();
   const int &HLT_Mu17();
   const int &HLT_Mu8_TrkIsoVVL();
@@ -1424,10 +1428,8 @@ namespace LeptonTreeNameSpace {
   const int &HLT_TkMu50();
   const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
   const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg();
-  const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg();
-  const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg();
-  const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg();
-  const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg();
+  const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
+  const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg();
   const int &HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
   const int &HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg();
   const int &HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
@@ -1468,8 +1470,6 @@ namespace LeptonTreeNameSpace {
   const int &HLT_Ele32_eta2p1_WPTight_Gsf();
   const int &HLT_Ele105_CaloIdVT_GsfTrkIdT();
   const int &HLT_Ele115_CaloIdVT_GsfTrkIdT();
-  const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg();
-  const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
   const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1();
   const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL();
   const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1();

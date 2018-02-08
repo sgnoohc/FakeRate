@@ -92,6 +92,7 @@ def rebin2d(hist, name):
 # Currently only the "ptvarbin" variable and "met" is being rebinned to do some "studies".
 #
 def rebin2d_2dmu(hist, name):
+    return hist
     ix = 7
     val = hist.GetBinContent( ix, 3 ) + hist.GetBinContent( ix, 2 )
     err = quadsum( [ hist.GetBinError( ix, 3 ), hist.GetBinError( ix, 2 ) ] )
@@ -540,7 +541,7 @@ def draw_fakerate_qcd_el(extraopt=""):
                   --yTitle N leptons
                   --xTitle p^{corr}_{T,e} [GeV]
                   --ratio_DrawOpt ep
-                  --ratio_Maximum 0.27
+                  --ratio_Maximum 0.77
                   --ratio_Minimum 0.0
                   --reverseRatio
                   --showOverflow
@@ -663,7 +664,7 @@ def draw_qcd_fakerate_mu_2d(extraopt="", scale=1.0):
     ratio.SetContour(100)
     ratio.GetXaxis().SetMoreLogLabels()
     ratio.SetMarkerColor(1)
-    ratio.SetMarkerSize(1.8)
+    ratio.SetMarkerSize(0.3)
     ratio.SetContour(100)
     ratio.GetXaxis().SetMoreLogLabels()
     ratio.GetXaxis().SetTitle( "p^{corr}_{T,#mu} [GeV]" )
@@ -801,6 +802,19 @@ def draw_qcd_fakerate_el_2d(extraopt="", scale=1.0):
     c1.SaveAs( "plots/2delectronfakerate_qcd.png" )
     return ratio
 
+def print_nvtx(hist, nf):
+
+    for ibin in xrange(2, 41):
+        print "    if (nvtx == {}) {{ rewgt = {} ; }}".format(ibin - 1, hist.GetBinContent(ibin))
+    print "    return rewgt / {};".format(nf)
+
+#    if (nvtx == 1)  { rewgt = 12.7278   ; }
+#    if (nvtx == 2)  { rewgt = 8.26908   ; }
+#    if (nvtx == 3)  { rewgt = 9.65956   ; }
+#    if (nvtx == 4)  { rewgt = 5.20147   ; }
+#    return rewgt / 1.0649;
+
+
 def main() :
 
     global prefix
@@ -820,10 +834,13 @@ def main() :
     draw("histo_nowgt_pt_el", "p_{T,e} [GeV]", "--xNbin 200 --saveMainPad --legendOnMainPad --Minimum 100 --reverseRatio" )
     draw("histo_nowgt_pt_mu", "p_{T,#mu} [GeV]", "--xNbin 200 --saveMainPad --legendOnMainPad --Minimum 100 --reverseRatio" )
 
-    draw(prefix + "evt_lvl_histo_nvtx_highpt50_mu", "N_{vtx} (#mu events)", "--saveMainPad --legendOnMainPad --legendOnMainPad --xNbin 1" )[0].Print("all")
-    draw(prefix + "evt_lvl_histo_nvtx_highpt50_el", "N_{vtx} (e events)", "--saveMainPad --legendOnMainPad --legendOnMainPad" )[0].Print("all")
-    draw(prefix + "evt_lvl_histo_nvtx_highpt50_mu", "N_{vtx} (#mu events)", "--saveMainPad --legendOnMainPad --legendOnMainPad" )[0].Print("all")
+    print "reweight function"
+    nvtx_nf_mu = draw(prefix + "evt_lvl_histo_nvtx_highpt50_mu", "N_{vtx} (#mu events)", "--saveMainPad --legendOnMainPad --legendOnMainPad --xNbin 1" )[0].GetBinContent(1)
+    nvtx_nf_el = draw(prefix + "evt_lvl_histo_nvtx_highpt50_el", "N_{vtx} (e events)", "--saveMainPad --legendOnMainPad --legendOnMainPad --xNbin 1" )[0].GetBinContent(1)
+    print_nvtx(draw(prefix + "evt_lvl_histo_nvtx_highpt50_mu", "N_{vtx} (#mu events)", "--saveMainPad --legendOnMainPad --legendOnMainPad" )[0], nvtx_nf_mu)
+    print_nvtx(draw(prefix + "evt_lvl_histo_nvtx_highpt50_el", "N_{vtx} (e events)", "--saveMainPad --legendOnMainPad --legendOnMainPad" )[0], nvtx_nf_el)
 
+    print "nvtxrewgted"
     draw(prefix + "evt_lvl_nvtxrewgt_histo_nvtx_highpt50_el", "N_{vtx} (e events)", "--saveMainPad --legendOnMainPad --legendOnMainPad"  )[0].Print("all")
     draw(prefix + "evt_lvl_nvtxrewgt_histo_nvtx_highpt50_mu", "N_{vtx} (#mu events)", "--saveMainPad --legendOnMainPad --legendOnMainPad"  )[0].Print("all")
 
@@ -851,19 +868,24 @@ def main() :
 #    sf_mu_4 = draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu_4", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
 #    print "sf_mu individ ", sf_mu_0, sf_mu_1, sf_mu_2, sf_mu_3, sf_mu_4
 
-    #sf_mu = draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
-    #sf_mu_syst1 = draw("syst13_evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
-    #sf_mu_syst2 = draw("syst14_evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+    draw("evt_lvl_nvtxrewgt_histo_conecorrpt_cr2_mu", "m_{T,#mu} [GeV]", "" )
+    draw("evt_lvl_nvtxrewgt_histo_conecorrpt_cr2_el", "m_{T,#mu} [GeV]", "" )
+
+    sf_mu = draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+    sf_mu_syst1 = draw("syst13_evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+    sf_mu_syst2 = draw("syst14_evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
 
 #    print "HEREHEREHERE2"
 #    sf_mu = draw("evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 4 )
 #    sf_mu_syst1 = draw("syst13_evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 4 )
 #    sf_mu_syst2 = draw("syst14_evt_lvl_nvtxrewgt_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 4 )
 
-    print "HEREHEREHERE2"
-    sf_mu = draw("evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 3 )
-    sf_mu_syst1 = draw("syst13_evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 3 )
-    sf_mu_syst2 = draw("syst14_evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 3 )
+    #print "HEREHEREHERE2"
+    #sf_mu = draw("evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 3 )
+    #sf_mu_syst1 = draw("syst13_evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 3 )
+    #sf_mu_syst2 = draw("syst14_evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 5", printcontent=True )[0].GetBinContent( 3 )
+    #sf_mu_syst1 = 1.
+    #sf_mu_syst2 = 2.*(sf_mu - 1.) + 1.
 
     #print "HEREHEREHERE2"
     #sf_mu = draw("evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "m_{T,#mu} [GeV]", "--xNbin 1", printcontent=True )[0].GetBinContent( 1 )
@@ -883,6 +905,12 @@ def main() :
     sf_el = draw("evt_lvl_nvtxrewgt_histo_mt_cr_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
     sf_el_syst1 = draw("syst13_evt_lvl_nvtxrewgt_histo_mt_cr_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
     sf_el_syst2 = draw("syst14_evt_lvl_nvtxrewgt_histo_mt_cr_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+
+    #sf_el = draw("evt_lvl_nvtxrewgt_histo_mt_meas2_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+    #sf_el_syst1 = draw("syst13_evt_lvl_nvtxrewgt_histo_mt_meas2_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+    #sf_el_syst2 = draw("syst14_evt_lvl_nvtxrewgt_histo_mt_meas2_el", "m_{T,e} [GeV]", "--xNbin 5" )[0].GetBinContent( 3 )
+    #sf_el_syst1 = 1.
+    #sf_el_syst2 = 2.*(sf_el - 1.) + 1.
 
     draw("evt_lvl_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "" )
     draw("syst13_evt_lvl_histo_mt_cr_mu", "m_{T,#mu} [GeV]", "" )
@@ -994,7 +1022,7 @@ def main() :
                   --ratio_DrawOpt ep
                   --ratio_Maximum 2.50
                   --ratio_Minimum 0.0
-                  --Maximum 0.15
+                  --Maximum 0.35
                   --printYieldsTable
                   --autoStack
                   --systByDiff
@@ -1013,6 +1041,9 @@ def main() :
     syst_data_vectors = r.vector( "TH1*" )()
     syst_bkg_vectors  = r.vector( "TH1*" )()
     syst_sig_vectors  = r.vector( "TH1*" )()
+    fakerate_nvtxrewgt_el_data[0].Print("all")
+    #fakerate_nvtxrewgt_el_data_systsum.Print("all")
+    fakerate_el_qcd[0].Print("all")
     data_vectors.push_back( fakerate_nvtxrewgt_el_data[0] )
     syst_data_vectors.push_back( fakerate_nvtxrewgt_el_data_systsum )
     bkg_vectors.push_back( fakerate_el_qcd[0] )
@@ -1025,7 +1056,7 @@ def main() :
                   --ratio_Maximum 2.00
                   --ratio_Minimum 0.0
                   --printYieldsTable
-                  --Maximum 0.37
+                  --Maximum 0.40
                   --autoStack
                   --systByDiff
                   --onlyLin
@@ -1037,10 +1068,13 @@ def main() :
                   """,
                   data_vectors, bkg_vectors, sig_vectors, syst_data_vectors, syst_bkg_vectors, syst_sig_vectors )[0].Print("all")
 
-    prefix = "syst13_"
-    fakerate_mu_2d_sys1 = draw_nvtxrewgt_fakerate_mu_2d("", sf_mu)
-    prefix = "syst14_"
-    fakerate_mu_2d_sys2 = draw_nvtxrewgt_fakerate_mu_2d("", sf_mu)
+    prefix = ""
+    fakerate_mu_2d_sys1 = draw_nvtxrewgt_fakerate_mu_2d("", sf_mu_syst1)
+    fakerate_mu_2d_sys2 = draw_nvtxrewgt_fakerate_mu_2d("", sf_mu_syst2)
+    #prefix = "syst13_"
+    #fakerate_mu_2d_sys1 = draw_nvtxrewgt_fakerate_mu_2d("", sf_mu)
+    #prefix = "syst14_"
+    #fakerate_mu_2d_sys2 = draw_nvtxrewgt_fakerate_mu_2d("", sf_mu)
     prefix = ""
     fakerate_mu_2d_nom  = draw_nvtxrewgt_fakerate_mu_2d("", sf_mu)
 
@@ -1052,9 +1086,12 @@ def main() :
 
     r.gStyle.SetPaintTextFormat( ".3f" )
 
-    prefix = "syst13_"
-    fakerate_el_2d_sys1 = draw_nvtxrewgt_fakerate_el_2d("", sf_el)
-    prefix = "syst14_"
+    prefix = ""
+    fakerate_el_2d_sys1 = draw_nvtxrewgt_fakerate_el_2d("", sf_el_syst1)
+    fakerate_el_2d_sys2 = draw_nvtxrewgt_fakerate_el_2d("", sf_el_syst2)
+    #prefix = "syst13_"
+    #fakerate_el_2d_sys1 = draw_nvtxrewgt_fakerate_el_2d("", sf_el)
+    #prefix = "syst14_"
     fakerate_el_2d_sys2 = draw_nvtxrewgt_fakerate_el_2d("", sf_el)
     prefix = ""
     fakerate_el_2d_nom  = draw_nvtxrewgt_fakerate_el_2d("", sf_el)
@@ -1081,7 +1118,7 @@ def main() :
     fakerate_el_2d.SetMaximum(0.9)
     fakerate_el_2d.SetMinimum(-0.15)
     fakerate_el_2d.SetMarkerColor(1)
-    fakerate_el_2d.SetMarkerSize(1.8)
+    fakerate_el_2d.SetMarkerSize(0.8)
     fakerate_el_2d.SetContour(100)
     fakerate_el_2d.GetXaxis().SetMoreLogLabels()
     fakerate_el_2d.GetXaxis().SetTitle( "p^{corr}_{T,e} [GeV]" )
@@ -1181,25 +1218,25 @@ def main() :
         elvals.append(stat)
         elvals.append(syst)
 
-    print ""
-    print " 1D Fake rate table for AN"
-    print "============================================================"
-    print "\\begin{table}[htb]"
-    print "    \caption{\label{tab:fakeratept} Fake rate as a function of cone-corrected $\pt$. The fake rate is presented in the following format: (fake rate)~$\pm$~(stat.)~$\pm$~(syst.)}"
-    print "    \centering"
-    print "    \\begin{tabular}{|l|c|c|c|c|}"
-    print "        \hline"
-    print "                 & $10 < \pt^{corr} < 20 $ & $20 < \pt^{corr} < 30 $ & $30 < \pt^{corr} < 50 $ & $\pt^{corr} > 50 $ \\\\"
-    print "        \hline"
-    print "        $\mu$    & {:.3f}\pm{:.3f}\pm{:.3f}$     & ${:.3f}\pm{:.3f}\pm{:.3f}$     & ${:.3f}\pm{:.3f}\pm{:.3f}$     & ${:.2f}\pm{:.2f}\pm{:.2f}$        \\\\".format(*muvals)
-    print "        \hline"
-    print "        $e$      & {:.3f}\pm{:.3f}\pm{:.3f}$     & ${:.3f}\pm{:.3f}\pm{:.3f}$     & ${:.3f}\pm{:.3f}\pm{:.3f}$     & ${:.2f}\pm{:.2f}\pm{:.2f}$       \\\\".format(*elvals)
-    print "        \hline"
-    print "    \end{tabular}"
-    print "\end{table}"
-    print "============================================================"
-    print ""
-    print ""
+    #print ""
+    #print " 1D Fake rate table for AN"
+    #print "============================================================"
+    #print "\\begin{table}[htb]"
+    #print "    \caption{\label{tab:fakeratept} Fake rate as a function of cone-corrected $\pt$. The fake rate is presented in the following format: (fake rate)~$\pm$~(stat.)~$\pm$~(syst.)}"
+    #print "    \centering"
+    #print "    \\begin{tabular}{|l|c|c|c|c|}"
+    #print "        \hline"
+    #print "                 & $10 < \pt^{corr} < 20 $ & $20 < \pt^{corr} < 30 $ & $30 < \pt^{corr} < 50 $ & $\pt^{corr} > 50 $ \\\\"
+    #print "        \hline"
+    #print "        $\mu$    & {:.3f}\pm{:.3f}\pm{:.3f}$     & ${:.3f}\pm{:.3f}\pm{:.3f}$     & ${:.3f}\pm{:.3f}\pm{:.3f}$     & ${:.2f}\pm{:.2f}\pm{:.2f}$        \\\\".format(*muvals)
+    #print "        \hline"
+    #print "        $e$      & {:.3f}\pm{:.3f}\pm{:.3f}$     & ${:.3f}\pm{:.3f}\pm{:.3f}$     & ${:.3f}\pm{:.3f}\pm{:.3f}$     & ${:.2f}\pm{:.2f}\pm{:.2f}$       \\\\".format(*elvals)
+    #print "        \hline"
+    #print "    \end{tabular}"
+    #print "\end{table}"
+    #print "============================================================"
+    #print ""
+    #print ""
 
     vals = []
     for ybin in xrange(1, fakerate_mu_2d.GetNbinsY()+1):
@@ -1209,26 +1246,26 @@ def main() :
             val.append(fakerate_mu_2d.GetBinError(xbin, ybin))
         vals.append(val)
 
-    print ""
-    print ""
-    print " Fake rate muon table for AN"
-    print "============================================================"
-    print "\\begin{table}[htb]"
-    print "    \caption{\label{tab:fakerateptetamu} Fake rate summary table for muons. The error includes both the statistical error and the systematic error.}"
-    print "    \centering"
-    print "    \\begin{tabular}{|l|c|c|c|c|}"
-    print "        \hline"
-    print "                         & $10 < \pt^{corr} < 20 $ & $20 < \pt^{corr} < 30 $ & $30 < \pt^{corr} < 50 $ & $\pt^{corr} > 50 $ \\\\"
-    print "        \hline"
-    print "        $0<|\eta|<1.2$   & ${:.2f} \pm{:.2f} $         & {:.2f}5 \pm{:.2f} $         & ${:.2f} \pm{:.2f} $         & {:.2f}8\pm{:.2f}$        \\\\".format(*vals[0])
-    print "        \hline"
-    print "        $1.2<|\eta|<2.1$ & ${:.2f} \pm{:.2f} $         & {:.2f}9 \pm{:.2f} $         & ${:.2f} \pm{:.2f} $         & {:.2f}2\pm{:.2f}$        \\\\".format(*vals[1])
-    print "        \hline"
-    print "        $2.1<|\eta|<2.4$ & ${:.2f} \pm{:.2f} $         & {:.2f}2 \pm{:.2f} $         & ${:.2f} \pm{:.2f} $         & {:.2f}2\pm{:.2f}$        \\\\".format(*vals[2])
-    print "        \hline"
-    print "    \end{tabular}"
-    print "\end{table}"
-    print "============================================================"
+    #print ""
+    #print ""
+    #print " Fake rate muon table for AN"
+    #print "============================================================"
+    #print "\\begin{table}[htb]"
+    #print "    \caption{\label{tab:fakerateptetamu} Fake rate summary table for muons. The error includes both the statistical error and the systematic error.}"
+    #print "    \centering"
+    #print "    \\begin{tabular}{|l|c|c|c|c|}"
+    #print "        \hline"
+    #print "                         & $10 < \pt^{corr} < 20 $ & $20 < \pt^{corr} < 30 $ & $30 < \pt^{corr} < 50 $ & $\pt^{corr} > 50 $ \\\\"
+    #print "        \hline"
+    #print "        $0<|\eta|<1.2$   & ${:.2f} \pm{:.2f} $         & {:.2f}5 \pm{:.2f} $         & ${:.2f} \pm{:.2f} $         & {:.2f}8\pm{:.2f}$        \\\\".format(*vals[0])
+    #print "        \hline"
+    #print "        $1.2<|\eta|<2.1$ & ${:.2f} \pm{:.2f} $         & {:.2f}9 \pm{:.2f} $         & ${:.2f} \pm{:.2f} $         & {:.2f}2\pm{:.2f}$        \\\\".format(*vals[1])
+    #print "        \hline"
+    #print "        $2.1<|\eta|<2.4$ & ${:.2f} \pm{:.2f} $         & {:.2f}2 \pm{:.2f} $         & ${:.2f} \pm{:.2f} $         & {:.2f}2\pm{:.2f}$        \\\\".format(*vals[2])
+    #print "        \hline"
+    #print "    \end{tabular}"
+    #print "\end{table}"
+    #print "============================================================"
 
     vals = []
     for ybin in xrange(1, fakerate_el_2d.GetNbinsY()+1):
@@ -1277,6 +1314,10 @@ if __name__ == "__main__":
     draw("evt_lvl_nvtxrewgt_histo_deltaphi_meas2_mu", "test" , "--xNbin 2")[0].Print("all")
     draw("evt_lvl_nvtxrewgt_histo_met_meas2_mu", "test" , "")[0].Print("all")
     draw("evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "test" , "")[0].Print("all")
+    draw("evt_lvl_nvtxrewgt_histo_deltaphi_meas2_el", "test" , "")[0].Print("all")
+    draw("evt_lvl_nvtxrewgt_histo_deltaphi_meas2_el", "test" , "--xNbin 2")[0].Print("all")
+    draw("evt_lvl_nvtxrewgt_histo_met_meas2_el", "test" , "")[0].Print("all")
+    draw("evt_lvl_nvtxrewgt_histo_mt_meas2_el", "test" , "")[0].Print("all")
     #draw("evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "test" , "--xNbin 5")[0].Print("all")
     #draw("syst13_evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "test" , "--xNbin 5")[0].Print("all")
     #draw("syst14_evt_lvl_nvtxrewgt_histo_mt_meas2_mu", "test" , "--xNbin 5")[0].Print("all")

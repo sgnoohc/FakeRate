@@ -129,6 +129,10 @@ void LeptonTree::Init(TTree *tree) {
   if (RelIso03_branch) RelIso03_branch->SetAddress(&RelIso03_);
   RelIso03EA_branch = tree->GetBranch("RelIso03EA");
   if (RelIso03EA_branch) RelIso03EA_branch->SetAddress(&RelIso03EA_);
+  RelIso03EAv2_branch = tree->GetBranch("RelIso03EAv2");
+  if (RelIso03EAv2_branch) RelIso03EAv2_branch->SetAddress(&RelIso03EAv2_);
+  RelIso04EAv2_branch = tree->GetBranch("RelIso04EAv2");
+  if (RelIso04EAv2_branch) RelIso04EAv2_branch->SetAddress(&RelIso04EAv2_);
   tag_RelIso03EA_branch = tree->GetBranch("tag_RelIso03EA");
   if (tag_RelIso03EA_branch) tag_RelIso03EA_branch->SetAddress(&tag_RelIso03EA_);
   RelIso03DB_branch = tree->GetBranch("RelIso03DB");
@@ -433,6 +437,10 @@ void LeptonTree::Init(TTree *tree) {
   if (lostHits_branch) lostHits_branch->SetAddress(&lostHits_);
   segmCompatibility_branch = tree->GetBranch("segmCompatibility");
   if (segmCompatibility_branch) segmCompatibility_branch->SetAddress(&segmCompatibility_);
+  ptErr_branch = tree->GetBranch("ptErr");
+  if (ptErr_branch) ptErr_branch->SetAddress(&ptErr_);
+  trk_pt_branch = tree->GetBranch("trk_pt");
+  if (trk_pt_branch) trk_pt_branch->SetAddress(&trk_pt_);
   HLT_Mu8_branch = tree->GetBranch("HLT_Mu8");
   if (HLT_Mu8_branch) HLT_Mu8_branch->SetAddress(&HLT_Mu8_);
   HLT_Mu17_branch = tree->GetBranch("HLT_Mu17");
@@ -455,14 +463,10 @@ void LeptonTree::Init(TTree *tree) {
   if (HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch) HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch->SetAddress(&HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_);
   HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch = tree->GetBranch("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg");
   if (HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch) HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch->SetAddress(&HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_);
-  HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch = tree->GetBranch("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg");
-  if (HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch) HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch->SetAddress(&HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_);
-  HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch = tree->GetBranch("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg");
-  if (HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch) HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch->SetAddress(&HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_);
-  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch = tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg");
-  if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch->SetAddress(&HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_);
-  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch = tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg");
-  if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch->SetAddress(&HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_);
+  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch = tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg");
+  if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch->SetAddress(&HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_);
+  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch = tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg");
+  if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch->SetAddress(&HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_);
   HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch = tree->GetBranch("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg");
   if (HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch) HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch->SetAddress(&HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_);
   HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch = tree->GetBranch("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg");
@@ -543,10 +547,6 @@ void LeptonTree::Init(TTree *tree) {
   if (HLT_Ele105_CaloIdVT_GsfTrkIdT_branch) HLT_Ele105_CaloIdVT_GsfTrkIdT_branch->SetAddress(&HLT_Ele105_CaloIdVT_GsfTrkIdT_);
   HLT_Ele115_CaloIdVT_GsfTrkIdT_branch = tree->GetBranch("HLT_Ele115_CaloIdVT_GsfTrkIdT");
   if (HLT_Ele115_CaloIdVT_GsfTrkIdT_branch) HLT_Ele115_CaloIdVT_GsfTrkIdT_branch->SetAddress(&HLT_Ele115_CaloIdVT_GsfTrkIdT_);
-  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch = tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg");
-  if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch->SetAddress(&HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_);
-  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch = tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg");
-  if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch->SetAddress(&HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_);
   HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1_branch = tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1");
   if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1_branch) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1_branch->SetAddress(&HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1_);
   HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_branch = tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL");
@@ -655,6 +655,8 @@ void LeptonTree::GetEntry(unsigned int idx) {
   mc_id_isLoaded = false;
   RelIso03_isLoaded = false;
   RelIso03EA_isLoaded = false;
+  RelIso03EAv2_isLoaded = false;
+  RelIso04EAv2_isLoaded = false;
   tag_RelIso03EA_isLoaded = false;
   RelIso03DB_isLoaded = false;
   pfChargedHadronIso_isLoaded = false;
@@ -808,6 +810,8 @@ void LeptonTree::GetEntry(unsigned int idx) {
   validHits_isLoaded = false;
   lostHits_isLoaded = false;
   segmCompatibility_isLoaded = false;
+  ptErr_isLoaded = false;
+  trk_pt_isLoaded = false;
   HLT_Mu8_isLoaded = false;
   HLT_Mu17_isLoaded = false;
   HLT_Mu8_TrkIsoVVL_isLoaded = false;
@@ -819,10 +823,8 @@ void LeptonTree::GetEntry(unsigned int idx) {
   HLT_TkMu50_isLoaded = false;
   HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_isLoaded = false;
   HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_isLoaded = false;
-  HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_isLoaded = false;
-  HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_isLoaded = false;
-  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_isLoaded = false;
-  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_isLoaded = false;
+  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_isLoaded = false;
+  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_isLoaded = false;
   HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_isLoaded = false;
   HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_isLoaded = false;
   HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_TrailingLeg_isLoaded = false;
@@ -863,8 +865,6 @@ void LeptonTree::GetEntry(unsigned int idx) {
   HLT_Ele32_eta2p1_WPTight_Gsf_isLoaded = false;
   HLT_Ele105_CaloIdVT_GsfTrkIdT_isLoaded = false;
   HLT_Ele115_CaloIdVT_GsfTrkIdT_isLoaded = false;
-  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_isLoaded = false;
-  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_isLoaded = false;
   HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1_isLoaded = false;
   HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_isLoaded = false;
   HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1_isLoaded = false;
@@ -950,6 +950,8 @@ void LeptonTree::LoadAllBranches() {
   if (mc_id_branch != 0) mc_id();
   if (RelIso03_branch != 0) RelIso03();
   if (RelIso03EA_branch != 0) RelIso03EA();
+  if (RelIso03EAv2_branch != 0) RelIso03EAv2();
+  if (RelIso04EAv2_branch != 0) RelIso04EAv2();
   if (tag_RelIso03EA_branch != 0) tag_RelIso03EA();
   if (RelIso03DB_branch != 0) RelIso03DB();
   if (pfChargedHadronIso_branch != 0) pfChargedHadronIso();
@@ -1103,6 +1105,8 @@ void LeptonTree::LoadAllBranches() {
   if (validHits_branch != 0) validHits();
   if (lostHits_branch != 0) lostHits();
   if (segmCompatibility_branch != 0) segmCompatibility();
+  if (ptErr_branch != 0) ptErr();
+  if (trk_pt_branch != 0) trk_pt();
   if (HLT_Mu8_branch != 0) HLT_Mu8();
   if (HLT_Mu17_branch != 0) HLT_Mu17();
   if (HLT_Mu8_TrkIsoVVL_branch != 0) HLT_Mu8_TrkIsoVVL();
@@ -1114,10 +1118,8 @@ void LeptonTree::LoadAllBranches() {
   if (HLT_TkMu50_branch != 0) HLT_TkMu50();
   if (HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch != 0) HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
   if (HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch != 0) HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg();
-  if (HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch != 0) HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg();
-  if (HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch != 0) HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg();
-  if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch != 0) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg();
-  if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch != 0) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg();
+  if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch != 0) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
+  if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch != 0) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg();
   if (HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch != 0) HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
   if (HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch != 0) HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg();
   if (HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch != 0) HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
@@ -1158,8 +1160,6 @@ void LeptonTree::LoadAllBranches() {
   if (HLT_Ele32_eta2p1_WPTight_Gsf_branch != 0) HLT_Ele32_eta2p1_WPTight_Gsf();
   if (HLT_Ele105_CaloIdVT_GsfTrkIdT_branch != 0) HLT_Ele105_CaloIdVT_GsfTrkIdT();
   if (HLT_Ele115_CaloIdVT_GsfTrkIdT_branch != 0) HLT_Ele115_CaloIdVT_GsfTrkIdT();
-  if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch != 0) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg();
-  if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch != 0) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg();
   if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1_branch != 0) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1();
   if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_branch != 0) HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL();
   if (HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1_branch != 0) HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1();
@@ -1973,6 +1973,32 @@ const float &LeptonTree::RelIso03EA() {
     RelIso03EA_isLoaded = true;
   }
   return RelIso03EA_;
+}
+
+const float &LeptonTree::RelIso03EAv2() {
+  if (not RelIso03EAv2_isLoaded) {
+    if (RelIso03EAv2_branch != 0) {
+      RelIso03EAv2_branch->GetEntry(index);
+    } else {
+      printf("branch RelIso03EAv2_branch does not exist!\n");
+      exit(1);
+    }
+    RelIso03EAv2_isLoaded = true;
+  }
+  return RelIso03EAv2_;
+}
+
+const float &LeptonTree::RelIso04EAv2() {
+  if (not RelIso04EAv2_isLoaded) {
+    if (RelIso04EAv2_branch != 0) {
+      RelIso04EAv2_branch->GetEntry(index);
+    } else {
+      printf("branch RelIso04EAv2_branch does not exist!\n");
+      exit(1);
+    }
+    RelIso04EAv2_isLoaded = true;
+  }
+  return RelIso04EAv2_;
 }
 
 const float &LeptonTree::tag_RelIso03EA() {
@@ -3964,6 +3990,32 @@ const float &LeptonTree::segmCompatibility() {
   return segmCompatibility_;
 }
 
+const float &LeptonTree::ptErr() {
+  if (not ptErr_isLoaded) {
+    if (ptErr_branch != 0) {
+      ptErr_branch->GetEntry(index);
+    } else {
+      printf("branch ptErr_branch does not exist!\n");
+      exit(1);
+    }
+    ptErr_isLoaded = true;
+  }
+  return ptErr_;
+}
+
+const float &LeptonTree::trk_pt() {
+  if (not trk_pt_isLoaded) {
+    if (trk_pt_branch != 0) {
+      trk_pt_branch->GetEntry(index);
+    } else {
+      printf("branch trk_pt_branch does not exist!\n");
+      exit(1);
+    }
+    trk_pt_isLoaded = true;
+  }
+  return trk_pt_;
+}
+
 const int &LeptonTree::HLT_Mu8() {
   if (not HLT_Mu8_isLoaded) {
     if (HLT_Mu8_branch != 0) {
@@ -4107,56 +4159,30 @@ const int &LeptonTree::HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg() {
   return HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_;
 }
 
-const int &LeptonTree::HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg() {
-  if (not HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_isLoaded) {
-    if (HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch != 0) {
-      HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch->GetEntry(index);
+const int &LeptonTree::HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg() {
+  if (not HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_isLoaded) {
+    if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch != 0) {
+      HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch->GetEntry(index);
     } else {
-      printf("branch HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch does not exist!\n");
+      printf("branch HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch does not exist!\n");
       exit(1);
     }
-    HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_isLoaded = true;
+    HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_isLoaded = true;
   }
-  return HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_;
+  return HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_;
 }
 
-const int &LeptonTree::HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg() {
-  if (not HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_isLoaded) {
-    if (HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch != 0) {
-      HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch->GetEntry(index);
+const int &LeptonTree::HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg() {
+  if (not HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_isLoaded) {
+    if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch != 0) {
+      HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch->GetEntry(index);
     } else {
-      printf("branch HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch does not exist!\n");
+      printf("branch HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch does not exist!\n");
       exit(1);
     }
-    HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_isLoaded = true;
+    HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_isLoaded = true;
   }
-  return HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_;
-}
-
-const int &LeptonTree::HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg() {
-  if (not HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_isLoaded) {
-    if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch != 0) {
-      HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch->GetEntry(index);
-    } else {
-      printf("branch HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_branch does not exist!\n");
-      exit(1);
-    }
-    HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_isLoaded = true;
-  }
-  return HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg_;
-}
-
-const int &LeptonTree::HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg() {
-  if (not HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_isLoaded) {
-    if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch != 0) {
-      HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch->GetEntry(index);
-    } else {
-      printf("branch HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_branch does not exist!\n");
-      exit(1);
-    }
-    HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_isLoaded = true;
-  }
-  return HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg_;
+  return HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_;
 }
 
 const int &LeptonTree::HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg() {
@@ -4679,32 +4705,6 @@ const int &LeptonTree::HLT_Ele115_CaloIdVT_GsfTrkIdT() {
   return HLT_Ele115_CaloIdVT_GsfTrkIdT_;
 }
 
-const int &LeptonTree::HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg() {
-  if (not HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_isLoaded) {
-    if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch != 0) {
-      HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch->GetEntry(index);
-    } else {
-      printf("branch HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_branch does not exist!\n");
-      exit(1);
-    }
-    HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_isLoaded = true;
-  }
-  return HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg_;
-}
-
-const int &LeptonTree::HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg() {
-  if (not HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_isLoaded) {
-    if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch != 0) {
-      HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch->GetEntry(index);
-    } else {
-      printf("branch HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_branch does not exist!\n");
-      exit(1);
-    }
-    HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_isLoaded = true;
-  }
-  return HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg_;
-}
-
 const int &LeptonTree::HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1() {
   if (not HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1_isLoaded) {
     if (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1_branch != 0) {
@@ -5049,6 +5049,8 @@ const int &motherID() { return lepton_tree.motherID(); }
 const int &mc_id() { return lepton_tree.mc_id(); }
 const float &RelIso03() { return lepton_tree.RelIso03(); }
 const float &RelIso03EA() { return lepton_tree.RelIso03EA(); }
+const float &RelIso03EAv2() { return lepton_tree.RelIso03EAv2(); }
+const float &RelIso04EAv2() { return lepton_tree.RelIso04EAv2(); }
 const float &tag_RelIso03EA() { return lepton_tree.tag_RelIso03EA(); }
 const float &RelIso03DB() { return lepton_tree.RelIso03DB(); }
 const float &pfChargedHadronIso() { return lepton_tree.pfChargedHadronIso(); }
@@ -5202,6 +5204,8 @@ const float &trkKink() { return lepton_tree.trkKink(); }
 const int &validHits() { return lepton_tree.validHits(); }
 const int &lostHits() { return lepton_tree.lostHits(); }
 const float &segmCompatibility() { return lepton_tree.segmCompatibility(); }
+const float &ptErr() { return lepton_tree.ptErr(); }
+const float &trk_pt() { return lepton_tree.trk_pt(); }
 const int &HLT_Mu8() { return lepton_tree.HLT_Mu8(); }
 const int &HLT_Mu17() { return lepton_tree.HLT_Mu17(); }
 const int &HLT_Mu8_TrkIsoVVL() { return lepton_tree.HLT_Mu8_TrkIsoVVL(); }
@@ -5213,10 +5217,8 @@ const int &HLT_Mu55() { return lepton_tree.HLT_Mu55(); }
 const int &HLT_TkMu50() { return lepton_tree.HLT_TkMu50(); }
 const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg() { return lepton_tree.HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg(); }
 const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg() { return lepton_tree.HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg(); }
-const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg() { return lepton_tree.HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg(); }
-const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg() { return lepton_tree.HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg(); }
-const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg() { return lepton_tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_TrailingLeg(); }
-const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg() { return lepton_tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_LeadingLeg(); }
+const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg() { return lepton_tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg(); }
+const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg() { return lepton_tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg(); }
 const int &HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg() { return lepton_tree.HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg(); }
 const int &HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg() { return lepton_tree.HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg(); }
 const int &HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_TrailingLeg() { return lepton_tree.HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_TrailingLeg(); }
@@ -5257,8 +5259,6 @@ const int &HLT_Ele27_eta2p1_WPTight_Gsf() { return lepton_tree.HLT_Ele27_eta2p1_
 const int &HLT_Ele32_eta2p1_WPTight_Gsf() { return lepton_tree.HLT_Ele32_eta2p1_WPTight_Gsf(); }
 const int &HLT_Ele105_CaloIdVT_GsfTrkIdT() { return lepton_tree.HLT_Ele105_CaloIdVT_GsfTrkIdT(); }
 const int &HLT_Ele115_CaloIdVT_GsfTrkIdT() { return lepton_tree.HLT_Ele115_CaloIdVT_GsfTrkIdT(); }
-const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg() { return lepton_tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_LeadingLeg(); }
-const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg() { return lepton_tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_TrailingLeg(); }
 const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1() { return lepton_tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_L1(); }
 const int &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL() { return lepton_tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL(); }
 const int &HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1() { return lepton_tree.HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_L1(); }
