@@ -13,6 +13,9 @@
 
 #include "LeptonTree.cc"
 
+#include <vector>
+#include <tuple>
+
 using namespace std;
 using namespace LeptonTreeNameSpace;
 
@@ -80,16 +83,12 @@ struct Lepton
     }
 };
 
-float computePtRel(LorentzVector lepp4, LorentzVector jetp4, bool subtractLep);
 double calculateMt(const LorentzVector p4, double met, double met_phi);
 float getPt(float pt, bool extrPtRel = false);
 float getEta(float eta, float ht, bool extrPtRel = false);
-bool passIsolatedFO(int id, float eta, float disc, float pt);
-float mvacut(float A, float B, float C, float pt_);
-void fill(RooUtil::AutoHist& hists, TString suffix, float& evt_mt, float& evt_met, float& weight);
-void fillFakeRateHistograms(RooUtil::AutoHist& hists, TString label, float& evt_met, float& evt_mt, float& weight);
-void fillEventLevelHistograms(std::vector<Lepton>& leptons, RooUtil::AutoHist& hists);
+void fill(RooUtil::AutoHist& hists, TString prefix, TString hname, TString regionname, bool ismu, bool passtight, float var, float wgt, float rewgt, int nbins, float min, float max);
+void fill(RooUtil::AutoHist& hists, TString prefix, TString hname, TString regionname, bool ismu, bool passtight, float var, float wgt, float rewgt, int nbins, double* bounds);
+void fill(RooUtil::AutoHist& hists, TString prefix, TString hname, TString regionname, bool ismu, bool passtight, float var, float vary, float wgt, float rewgt, int nbins, double* bounds, int nbinsy, double* boundsy);
 void fillEventLevelHistogramsSyst(std::vector<Lepton> leptons, RooUtil::AutoHist& hists, int njets, float evt_met, float evt_metPhi, float evt_mt, int iwgt, TString);
-void fillEventLevelHistogramsSyst_v1(std::vector<Lepton> leptons, RooUtil::AutoHist& hists, int njets, float evt_met, float evt_metPhi, float evt_mt, int iwgt, TString);
 
 #include "nvtxreweight.h"

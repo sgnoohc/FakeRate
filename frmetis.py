@@ -12,7 +12,7 @@ import sys
 import os
 
 # Configurations
-job_tag = "fr_baseline_v2_3l_20180207"
+job_tag = "fr_baseline_v2_3l_20180212"
 exec_path = "scripts/run.sh"
 tar_path = "package.tar.gz"
 hadoop_path = "metis/fr/{}".format(job_tag)
