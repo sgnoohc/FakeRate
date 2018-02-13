@@ -106,7 +106,7 @@ def plot(varname, region, t, option={}, addqcd=False, nfs=[], syst=""):
     mindata = h_data.GetMaximum()
     ymax = max(maxbkg, maxdata)
     ymin = min(minbkg, mindata)
-    yrange = [ymin, ymax]
+    yrange = [0, ymax*2.]
     if "yaxis_log" in option and option["yaxis_log"]:
         yrange = [ymin / 10000., ymax * 100.]
     if varname.find("varbin") != -1:
@@ -393,6 +393,7 @@ def draw_fakerate_2d_mu():
     min_qcd = h_fakerate_2d_mu_qcd.GetMinimum()
     ply.plot_hist_2d( h_fakerate_2d_mu_data_fullerror, options = { "output_name": "frplots/fakerate_2d_mu_data.png", "zaxis_range": [min_data/1.5, 1.5*max_data], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation" })
     ply.plot_hist_2d( h_fakerate_2d_mu_qcd           , options = { "output_name": "frplots/fakerate_2d_mu_qcd.png" , "zaxis_range": [min_qcd /1.5, 1.5*max_qcd ], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation" })
+    return h_fakerate_2d_mu_data_fullerror, h_fakerate_2d_mu_qcd
 
 def draw_fakerate_2d_el():
     h_fakerate_2d_el_data = fakerate_2d_el_data_hist().Clone("h_fakerate_2d_el_data")
@@ -411,10 +412,37 @@ def draw_fakerate_2d_el():
     min_qcd = h_fakerate_2d_el_qcd.GetMinimum()
     ply.plot_hist_2d( h_fakerate_2d_el_data_fullerror, options = { "output_name": "frplots/fakerate_2d_el_data.png", "zaxis_range": [min_data/1.5, 1.5*max_data], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation" })
     ply.plot_hist_2d( h_fakerate_2d_el_qcd           , options = { "output_name": "frplots/fakerate_2d_el_qcd.png" , "zaxis_range": [min_qcd /1.5, 1.5*max_qcd ], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation" })
+    return h_fakerate_2d_el_data_fullerror, h_fakerate_2d_el_qcd
+
+###################################################################################################
+#
+#
+# Finally, the scripts to actually perform the jobs.
+#
+#
+###################################################################################################
+def draw_ewkcr_1d_mu(): plot("mt", "CR", "tightmu", {"output_name": "frplots/plot_cr_tightmu.png"}, False)
+def draw_ewkcr_1d_el(): plot("mt", "CR", "tightel", {"output_name": "frplots/plot_cr_tightel.png"}, False)
+def draw_ewkcr2_1d_mu(): plot("mt", "CR2", "tightmu", {"output_name": "frplots/plot_cr2_tightmu.png"}, False)
+def draw_ewkcr2_1d_el(): plot("mt", "CR2", "tightel", {"output_name": "frplots/plot_cr2_tightel.png"}, False)
+def draw_ewkcr3_1d_mu(): plot("mt", "CR3", "tightmu", {"output_name": "frplots/plot_cr3_tightmu.png"}, False)
+def draw_ewkcr3_1d_el(): plot("mt", "CR3", "tightel", {"output_name": "frplots/plot_cr3_tightel.png"}, False)
 
 if __name__ == "__main__":
+    of = r.TFile("frplots/fakerate.root", "recreate")
     draw_fakerate_1d_mu()
     draw_fakerate_1d_el()
-    draw_fakerate_2d_mu()
-    draw_fakerate_2d_el()
-
+    d, q = draw_fakerate_2d_mu()
+    of.cd()
+    d.Clone("fakerate_mu_data").Write()
+    q.Clone("fakerate_mu_qcd").Write()
+    d, q = draw_fakerate_2d_el()
+    of.cd()
+    d.Clone("fakerate_el_data").Write()
+    q.Clone("fakerate_el_qcd").Write()
+    draw_ewkcr_1d_mu()
+    draw_ewkcr_1d_el()
+    draw_ewkcr2_1d_mu()
+    draw_ewkcr2_1d_el()
+    draw_ewkcr3_1d_mu()
+    draw_ewkcr3_1d_el()
