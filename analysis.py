@@ -165,6 +165,50 @@ def nfs_from_CR_mu(syst, inclqcd):
     h_qcd   = tightmu_qcd  ("conecorrptvarbin", "CR", "")
     h_data  = tightmu_data ("conecorrptvarbin", "CR", syst).Clone("Data")
     h_ratio = tightmu_data ("conecorrptvarbin", "CR", syst).Clone("ratio")
+    h_ratio.Rebin(4)
+    h_bkg   = h_wj.Clone   ("ratio")
+    h_bkg.Add(h_dy)
+    h_bkg.Add(h_ttbar)
+    h_bkg.Add(h_vv)
+    if inclqcd: h_bkg.Add(h_qcd)
+    h_bkg.Rebin(4)
+    h_ratio.Divide(h_bkg)
+    nfs = [ [ h_ratio.GetBinContent(i), h_ratio.GetBinError(i) ] for i in xrange(1, h_ratio.GetNbinsX()+1) ]
+    if syst == "":
+        p.plot_hist( sigs = [], bgs = [h_wj.Clone("W"), h_dy.Clone("Z"), h_ttbar.Clone("Top"), h_vv.Clone("VV")], data = h_data.Clone("Data"), colors = [2001, 2003, 7004, 7005], options = {"output_name":"frplots/plot_cr_tightmu_conecorrpt_noqcd.png", "divide_by_bin_width":True, "xaxis_log":True, "ratio_xaxis_title":"#it{p}_{T,cone-corr} [GeV]"})
+        p.plot_hist( sigs = [], bgs = [h_wj.Clone("W"), h_dy.Clone("Z"), h_ttbar.Clone("Top"), h_vv.Clone("VV"), h_qcd.Clone("QCD")], data = h_data.Clone("Data"), colors = [2001, 2003, 7004, 7005, 2005], options = {"output_name":"frplots/plot_cr_tightmu_conecorrpt.png", "divide_by_bin_width":True, "xaxis_log":True, "ratio_xaxis_title":"#it{p}_{T,cone-corr} [GeV]"})
+    return nfs
+
+def nfs_from_CR_el(syst, inclqcd):
+    h_wj    = tightel_wj   ("conecorrptvarbin", "CR", syst)
+    h_dy    = tightel_dy   ("conecorrptvarbin", "CR", syst)
+    h_ttbar = tightel_ttbar("conecorrptvarbin", "CR", syst)
+    h_vv    = tightel_vv   ("conecorrptvarbin", "CR", syst)
+    h_qcd   = tightel_qcd  ("conecorrptvarbin", "CR", "")
+    h_data  = tightel_data ("conecorrptvarbin", "CR", syst).Clone("Data")
+    h_ratio = tightel_data ("conecorrptvarbin", "CR", syst).Clone("ratio")
+    h_ratio.Rebin(4)
+    h_bkg   = h_wj.Clone   ("ratio")
+    h_bkg.Add(h_dy)
+    h_bkg.Add(h_ttbar)
+    h_bkg.Add(h_vv)
+    if inclqcd: h_bkg.Add(h_qcd)
+    h_bkg.Rebin(4)
+    h_ratio.Divide(h_bkg)
+    nfs = [ [ h_ratio.GetBinContent(i), h_ratio.GetBinError(i) ] for i in xrange(1, h_ratio.GetNbinsX()+1) ]
+    if syst == "":
+        p.plot_hist( sigs = [], bgs = [h_wj.Clone("W"), h_dy.Clone("Z"), h_ttbar.Clone("Top"), h_vv.Clone("VV")], data = h_data.Clone("Data"), colors = [2001, 2003, 7004, 7005], options = {"output_name":"frplots/plot_cr_tightel_conecorrpt_noqcd.png", "divide_by_bin_width":True, "xaxis_log":True, "ratio_xaxis_title":"#it{p}_{T,cone-corr} [GeV]"})
+        p.plot_hist( sigs = [], bgs = [h_wj.Clone("W"), h_dy.Clone("Z"), h_ttbar.Clone("Top"), h_vv.Clone("VV"), h_qcd.Clone("QCD")], data = h_data.Clone("Data"), colors = [2001, 2003, 7004, 7005, 2005], options = {"output_name":"frplots/plot_cr_tightel_conecorrpt.png", "divide_by_bin_width":True, "xaxis_log":True, "ratio_xaxis_title":"#it{p}_{T,cone-corr} [GeV]"})
+    return nfs
+
+def nfs_from_CR_mu_ptbin(syst, inclqcd):
+    h_wj    = tightmu_wj   ("conecorrptvarbin", "CR", syst)
+    h_dy    = tightmu_dy   ("conecorrptvarbin", "CR", syst)
+    h_ttbar = tightmu_ttbar("conecorrptvarbin", "CR", syst)
+    h_vv    = tightmu_vv   ("conecorrptvarbin", "CR", syst)
+    h_qcd   = tightmu_qcd  ("conecorrptvarbin", "CR", "")
+    h_data  = tightmu_data ("conecorrptvarbin", "CR", syst).Clone("Data")
+    h_ratio = tightmu_data ("conecorrptvarbin", "CR", syst).Clone("ratio")
     h_bkg   = h_wj.Clone   ("ratio")
     h_bkg.Add(h_dy)
     h_bkg.Add(h_ttbar)
@@ -177,7 +221,7 @@ def nfs_from_CR_mu(syst, inclqcd):
         p.plot_hist( sigs = [], bgs = [h_wj.Clone("W"), h_dy.Clone("Z"), h_ttbar.Clone("Top"), h_vv.Clone("VV"), h_qcd.Clone("QCD")], data = h_data.Clone("Data"), colors = [2001, 2003, 7004, 7005, 2005], options = {"output_name":"frplots/plot_cr_tightmu_conecorrpt.png", "divide_by_bin_width":True, "xaxis_log":True, "ratio_xaxis_title":"#it{p}_{T,cone-corr} [GeV]"})
     return nfs
 
-def nfs_from_CR_el(syst, inclqcd):
+def nfs_from_CR_el_ptbin(syst, inclqcd):
     h_wj    = tightel_wj   ("conecorrptvarbin", "CR", syst)
     h_dy    = tightel_dy   ("conecorrptvarbin", "CR", syst)
     h_ttbar = tightel_ttbar("conecorrptvarbin", "CR", syst)
@@ -211,8 +255,8 @@ def nfs_from_CR3_mu(syst):
     h_bkg.Add(h_vv)
     h_bkg.Rebin(50)
     h_ratio.Divide(h_bkg)
-    print h_ratio.GetBinContent(1)
-    print h_ratio.GetBinError(1)
+    #print h_ratio.GetBinContent(1)
+    #print h_ratio.GetBinError(1)
     nfs = [ [ h_ratio.GetBinContent(i), h_ratio.GetBinError(i) ] for i in xrange(1, h_ratio.GetNbinsX()+1) ]
     return nfs
 
@@ -229,8 +273,8 @@ def nfs_from_CR3_el(syst):
     h_bkg.Add(h_vv)
     h_bkg.Rebin(50)
     h_ratio.Divide(h_bkg)
-    print h_ratio.GetBinContent(1)
-    print h_ratio.GetBinError(1)
+    #print h_ratio.GetBinContent(1)
+    #print h_ratio.GetBinError(1)
     nfs = [ [ h_ratio.GetBinContent(i), h_ratio.GetBinError(i) ] for i in xrange(1, h_ratio.GetNbinsX()+1) ]
     return nfs
 
@@ -250,8 +294,8 @@ def nfs_from_CR2_mu(syst, inclqcd):
     if inclqcd: h_bkg.Add(h_qcd)
     h_bkg.Rebin(50)
     h_ratio.Divide(h_bkg)
-    print h_ratio.GetBinContent(1)
-    print h_ratio.GetBinError(1)
+    #print h_ratio.GetBinContent(1)
+    #print h_ratio.GetBinError(1)
     nfs = [ [ h_ratio.GetBinContent(i), h_ratio.GetBinError(i) ] for i in xrange(1, h_ratio.GetNbinsX()+1) ]
     return nfs
 
@@ -290,10 +334,10 @@ def nfs_from_CR2_el(syst, inclqcd):
     if inclqcd: h_bkg.Add(h_qcd)
     h_bkg.Rebin(50)
     h_ratio.Divide(h_bkg)
-    print h_ratio.GetBinContent(1)
-    print h_ratio.GetBinError(1)
+    #print h_ratio.GetBinContent(1)
+    #print h_ratio.GetBinError(1)
     nfs = [ [ h_ratio.GetBinContent(i), h_ratio.GetBinError(i) ] for i in xrange(1, h_ratio.GetNbinsX()+1) ]
-    plot_conecorrpt_CR2_el(syst)
+    plot_conecorrpt_CR2_el(syst, inclqcd)
     return nfs
 
 ###################################################################################################
@@ -304,14 +348,14 @@ def nfs_from_CR2_el(syst, inclqcd):
 #
 ###################################################################################################
 def fakerate_1d_mu_data_hist(syst="", nfscheme=nfs_from_CR_mu, nfsinclqcd=False):
-    h_mu_tight = plot("conecorrptvarbin", "MR", "tightmu", {"output_name": "frplots/plot_tightmu.png", "yaxis_log":True, "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"Events / Bin Width"}, False, nfscheme(syst, nfsinclqcd), syst).Clone("tight")
-    h_mu_loose = plot("conecorrptvarbin", "MR", "loosemu", {"output_name": "frplots/plot_loosemu.png", "yaxis_log":True, "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"Events / Bin Width"}, False, nfscheme(syst, nfsinclqcd), syst).Clone("loose")
+    h_mu_tight = plot("conecorrptvarbin", "MR", "tightmu", {"output_name": "frplots/{}plot_tightmu.png".format(syst), "yaxis_log":True, "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"Events / Bin Width", "hist_disable_xerrors":False}, False, nfscheme(syst, nfsinclqcd), syst).Clone("tight")
+    h_mu_loose = plot("conecorrptvarbin", "MR", "loosemu", {"output_name": "frplots/{}plot_loosemu.png".format(syst), "yaxis_log":True, "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"Events / Bin Width", "hist_disable_xerrors":False}, False, nfscheme(syst, nfsinclqcd), syst).Clone("loose")
     h_mu_tight.Divide(h_mu_loose)
     return h_mu_tight
 
 def fakerate_1d_el_data_hist(syst="", nfscheme=nfs_from_CR_el, nfsinclqcd=False):
-    h_el_tight = plot("conecorrptvarbin", "MR", "tightel", {"output_name": "frplots/plot_tightel.png", "yaxis_log":True, "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"Events / Bin Width"}, False, nfscheme(syst, nfsinclqcd), syst).Clone("tight")
-    h_el_loose = plot("conecorrptvarbin", "MR", "looseel", {"output_name": "frplots/plot_looseel.png", "yaxis_log":True, "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"Events / Bin Width"}, False, nfscheme(syst, nfsinclqcd), syst).Clone("loose")
+    h_el_tight = plot("conecorrptvarbin", "MR", "tightel", {"output_name": "frplots/{}plot_tightel.png".format(syst), "yaxis_log":True, "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"Events / Bin Width", "hist_disable_xerrors":False}, False, nfscheme(syst, nfsinclqcd), syst).Clone("tight")
+    h_el_loose = plot("conecorrptvarbin", "MR", "looseel", {"output_name": "frplots/{}plot_looseel.png".format(syst), "yaxis_log":True, "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"Events / Bin Width", "hist_disable_xerrors":False}, False, nfscheme(syst, nfsinclqcd), syst).Clone("loose")
     h_el_tight.Divide(h_el_loose)
     return h_el_tight
 
@@ -328,14 +372,14 @@ def fakerate_1d_el_qcd_hist(syst=""):
     return h_el_tight_qcd
 
 def fakerate_2d_mu_data_hist(syst="", nfscheme=nfs_from_CR_mu, nfsinclqcd=False):
-    h_mu_tight = plot2d("conecorrpt_v_eta_muvarbin", "MR", "tightmu", {"output_name": "frplots/plot2d_tightmu.png"}, False, nfscheme(syst, nfsinclqcd), syst).Clone("tight")
-    h_mu_loose = plot2d("conecorrpt_v_eta_muvarbin", "MR", "loosemu", {"output_name": "frplots/plot2d_loosemu.png"}, False, nfscheme(syst, nfsinclqcd), syst).Clone("loose")
+    h_mu_tight = plot2d("conecorrpt_v_eta_muvarbin", "MR", "tightmu", {"output_name": "frplots/{}plot2d_tightmu.png".format(syst)}, False, nfscheme(syst, nfsinclqcd), syst).Clone("tight")
+    h_mu_loose = plot2d("conecorrpt_v_eta_muvarbin", "MR", "loosemu", {"output_name": "frplots/{}plot2d_loosemu.png".format(syst)}, False, nfscheme(syst, nfsinclqcd), syst).Clone("loose")
     h_mu_tight.Divide(h_mu_loose)
     return h_mu_tight
 
 def fakerate_2d_el_data_hist(syst="", nfscheme=nfs_from_CR_el, nfsinclqcd=False):
-    h_el_tight = plot2d("conecorrpt_v_eta_elvarbin", "MR", "tightel", {"output_name": "frplots/plot2d_tightel.png"}, False, nfscheme(syst, nfsinclqcd), syst).Clone("tight")
-    h_el_loose = plot2d("conecorrpt_v_eta_elvarbin", "MR", "looseel", {"output_name": "frplots/plot2d_looseel.png"}, False, nfscheme(syst, nfsinclqcd), syst).Clone("loose")
+    h_el_tight = plot2d("conecorrpt_v_eta_elvarbin", "MR", "tightel", {"output_name": "frplots/{}plot2d_tightel.png".format(syst)}, False, nfscheme(syst, nfsinclqcd), syst).Clone("tight")
+    h_el_loose = plot2d("conecorrpt_v_eta_elvarbin", "MR", "looseel", {"output_name": "frplots/{}plot2d_looseel.png".format(syst)}, False, nfscheme(syst, nfsinclqcd), syst).Clone("loose")
     h_el_tight.Divide(h_el_loose)
     return h_el_tight
 
@@ -367,6 +411,7 @@ def get_full_error(nominal, systup, systdn):
         dup = abs(diffup.GetBinContent(i))
         ddn = abs(diffdn.GetBinContent(i))
         d = max(dup, ddn)
+        #d = math.sqrt(dup**2 + ddn**2)
         be = nominal.GetBinError(i)
         nominal.SetBinError(i, math.sqrt(be**2 + d**2))
     return nominal
@@ -394,66 +439,68 @@ def get_full_error_2d(nominal, systup, systdn):
 ###################################################################################################
 def draw_fakerate_1d_mu(nfscheme=nfs_from_CR_mu, nfsinclqcd=False):
     h_fakerate_1d_mu_data = fakerate_1d_mu_data_hist(nfscheme=nfscheme, nfsinclqcd=nfsinclqcd).Clone("h_fakerate_1d_mu_data")
-    h_fakerate_1d_mu_data.Print("all")
+    #h_fakerate_1d_mu_data.Print("all")
     h_fakerate_1d_mu_data_syst13 = fakerate_1d_mu_data_hist("syst13_", nfscheme=nfscheme, nfsinclqcd=nfsinclqcd).Clone("h_fakerate_1d_mu_data")
-    h_fakerate_1d_mu_data_syst13.Print("all")
+    #h_fakerate_1d_mu_data_syst13.Print("all")
     h_fakerate_1d_mu_data_syst14 = fakerate_1d_mu_data_hist("syst14_", nfscheme=nfscheme, nfsinclqcd=nfsinclqcd).Clone("h_fakerate_1d_mu_data")
-    h_fakerate_1d_mu_data_syst14.Print("all")
+    #h_fakerate_1d_mu_data_syst14.Print("all")
     h_fakerate_1d_mu_data_fullerror = get_full_error(h_fakerate_1d_mu_data, h_fakerate_1d_mu_data_syst13, h_fakerate_1d_mu_data_syst14)
-    h_fakerate_1d_mu_data_fullerror.Print("all")
+    #h_fakerate_1d_mu_data_fullerror.Print("all")
     h_fakerate_1d_mu_qcd  = fakerate_1d_mu_qcd_hist().Clone("QCD")
-    h_fakerate_1d_mu_qcd .Print("all")
-    p.plot_hist(sigs=[], bgs=[h_fakerate_1d_mu_qcd], data=h_fakerate_1d_mu_data_fullerror, colors=[2], options={"output_name":"frplots/fakerate_mu.png", "ratio_range":[0.0, 2.0], "draw_points":True, "yaxis_label":"Fake Rate", "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]"})
+    #h_fakerate_1d_mu_qcd .Print("all")
+    p.plot_hist(sigs=[], bgs=[h_fakerate_1d_mu_qcd.Clone("QCD")], data=h_fakerate_1d_mu_data_fullerror, colors=[2], options={"output_name":"frplots/fakerate_mu.png" , "ratio_range":[0.0, 2.0], "draw_points":True, "yaxis_label":"Fake Rate", "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "ymax_scale":0.65})
+    p.plot_hist(sigs=[], bgs=[h_fakerate_1d_mu_qcd.Clone("QCD")], data=h_fakerate_1d_mu_data_syst13, colors=[2], options={"output_name":"frplots/syst13_fakerate_mu.png", "ratio_range":[0.0, 2.0], "draw_points":True, "yaxis_label":"Fake Rate", "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "ymax_scale":0.65})
+    p.plot_hist(sigs=[], bgs=[h_fakerate_1d_mu_qcd.Clone("QCD")], data=h_fakerate_1d_mu_data_syst14, colors=[2], options={"output_name":"frplots/syst14_fakerate_mu.png", "ratio_range":[0.0, 2.0], "draw_points":True, "yaxis_label":"Fake Rate", "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "ymax_scale":0.65})
 
 def draw_fakerate_1d_el(nfscheme=nfs_from_CR_el, nfsinclqcd=False):
     h_fakerate_1d_el_data = fakerate_1d_el_data_hist(nfscheme=nfscheme, nfsinclqcd=nfsinclqcd).Clone("h_fakerate_1d_el_data")
-    h_fakerate_1d_el_data.Print("all")
+    #h_fakerate_1d_el_data.Print("all")
     h_fakerate_1d_el_data_syst13 = fakerate_1d_el_data_hist("syst13_", nfscheme=nfscheme, nfsinclqcd=nfsinclqcd).Clone("h_fakerate_1d_el_data")
-    h_fakerate_1d_el_data_syst13.Print("all")
+    #h_fakerate_1d_el_data_syst13.Print("all")
     h_fakerate_1d_el_data_syst14 = fakerate_1d_el_data_hist("syst14_", nfscheme=nfscheme, nfsinclqcd=nfsinclqcd).Clone("h_fakerate_1d_el_data")
-    h_fakerate_1d_el_data_syst14.Print("all")
+    #h_fakerate_1d_el_data_syst14.Print("all")
     h_fakerate_1d_el_data_fullerror = get_full_error(h_fakerate_1d_el_data, h_fakerate_1d_el_data_syst13, h_fakerate_1d_el_data_syst14)
-    h_fakerate_1d_el_data_fullerror.Print("all")
+    #h_fakerate_1d_el_data_fullerror.Print("all")
     h_fakerate_1d_el_qcd  = fakerate_1d_el_qcd_hist().Clone("QCD")
-    h_fakerate_1d_el_qcd .Print("all")
-    p.plot_hist(sigs=[], bgs=[h_fakerate_1d_el_qcd], data=h_fakerate_1d_el_data_fullerror, colors=[2], options={"output_name":"frplots/fakerate_el.png", "ratio_range":[0.0, 2.0], "draw_points":True, "yaxis_label":"Fake Rate", "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]"})
+    #h_fakerate_1d_el_qcd .Print("all")
+    p.plot_hist(sigs=[], bgs=[h_fakerate_1d_el_qcd], data=h_fakerate_1d_el_data_fullerror, colors=[2], options={"output_name":"frplots/fakerate_el.png", "ratio_range":[0.0, 2.0], "draw_points":True, "yaxis_label":"Fake Rate", "no_ratio":True, "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "ymax_scale":1.0})
 
 def draw_fakerate_2d_mu(nfscheme=nfs_from_CR_mu, nfsinclqcd=False):
     h_fakerate_2d_mu_data = fakerate_2d_mu_data_hist(nfscheme=nfscheme, nfsinclqcd=nfsinclqcd).Clone("h_fakerate_2d_mu_data")
-    h_fakerate_2d_mu_data.Print("all")
+    #h_fakerate_2d_mu_data.Print("all")
     h_fakerate_2d_mu_data_syst13 = fakerate_2d_mu_data_hist("syst13_", nfscheme=nfscheme, nfsinclqcd=nfsinclqcd).Clone("h_fakerate_2d_mu_data")
-    h_fakerate_2d_mu_data_syst13.Print("all")
+    #h_fakerate_2d_mu_data_syst13.Print("all")
     h_fakerate_2d_mu_data_syst14 = fakerate_2d_mu_data_hist("syst14_", nfscheme=nfscheme, nfsinclqcd=nfsinclqcd).Clone("h_fakerate_2d_mu_data")
-    h_fakerate_2d_mu_data_syst14.Print("all")
+    #h_fakerate_2d_mu_data_syst14.Print("all")
     h_fakerate_2d_mu_data_fullerror = get_full_error_2d(h_fakerate_2d_mu_data, h_fakerate_2d_mu_data_syst13, h_fakerate_2d_mu_data_syst14)
-    h_fakerate_2d_mu_data_fullerror.Print("all")
+    #h_fakerate_2d_mu_data_fullerror.Print("all")
     h_fakerate_2d_mu_qcd  = fakerate_2d_mu_qcd_hist().Clone("QCD")
-    h_fakerate_2d_mu_qcd .Print("all")
+    #h_fakerate_2d_mu_qcd .Print("all")
     max_data = h_fakerate_2d_mu_data_fullerror.GetMaximum()
     min_data = h_fakerate_2d_mu_data_fullerror.GetMinimum()
     max_qcd = h_fakerate_2d_mu_qcd.GetMaximum()
     min_qcd = h_fakerate_2d_mu_qcd.GetMinimum()
-    ply.plot_hist_2d( h_fakerate_2d_mu_data_fullerror, options = { "output_name": "frplots/fakerate_2d_mu_data.png", "zaxis_range": [min_data/1.5, 1.5*max_data], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation" })
-    ply.plot_hist_2d( h_fakerate_2d_mu_qcd           , options = { "output_name": "frplots/fakerate_2d_mu_qcd.png" , "zaxis_range": [min_qcd /1.5, 1.5*max_qcd ], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation" })
+    ply.plot_hist_2d( h_fakerate_2d_mu_data_fullerror, options = { "output_name": "frplots/fakerate_2d_mu_data.png", "zaxis_range": [min_data/1.5, 1.5*max_data], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation", "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"|#eta|", "xaxis_title_offset":1.4, "yaxis_title_offset":1.4 })
+    ply.plot_hist_2d( h_fakerate_2d_mu_qcd           , options = { "output_name": "frplots/fakerate_2d_mu_qcd.png" , "zaxis_range": [min_qcd /1.5, 1.5*max_qcd ], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation", "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"|#eta|", "xaxis_title_offset":1.4, "yaxis_title_offset":1.4 })
     return h_fakerate_2d_mu_data_fullerror, h_fakerate_2d_mu_qcd
 
 def draw_fakerate_2d_el(nfscheme=nfs_from_CR_el, nfsinclqcd=False):
     h_fakerate_2d_el_data = fakerate_2d_el_data_hist(nfscheme=nfscheme, nfsinclqcd=nfsinclqcd).Clone("h_fakerate_2d_el_data")
-    h_fakerate_2d_el_data.Print("all")
+    #h_fakerate_2d_el_data.Print("all")
     h_fakerate_2d_el_data_syst13 = fakerate_2d_el_data_hist("syst13_", nfscheme=nfscheme, nfsinclqcd=nfsinclqcd).Clone("h_fakerate_2d_el_data")
-    h_fakerate_2d_el_data_syst13.Print("all")
+    #h_fakerate_2d_el_data_syst13.Print("all")
     h_fakerate_2d_el_data_syst14 = fakerate_2d_el_data_hist("syst14_", nfscheme=nfscheme, nfsinclqcd=nfsinclqcd).Clone("h_fakerate_2d_el_data")
-    h_fakerate_2d_el_data_syst14.Print("all")
+    #h_fakerate_2d_el_data_syst14.Print("all")
     h_fakerate_2d_el_data_fullerror = get_full_error_2d(h_fakerate_2d_el_data, h_fakerate_2d_el_data_syst13, h_fakerate_2d_el_data_syst14)
-    h_fakerate_2d_el_data_fullerror.Print("all")
+    #h_fakerate_2d_el_data_fullerror.Print("all")
     h_fakerate_2d_el_qcd  = fakerate_2d_el_qcd_hist().Clone("QCD")
-    h_fakerate_2d_el_qcd .Print("all")
+    #h_fakerate_2d_el_qcd .Print("all")
     max_data = h_fakerate_2d_el_data_fullerror.GetMaximum()
     min_data = h_fakerate_2d_el_data_fullerror.GetMinimum()
     max_qcd = h_fakerate_2d_el_qcd.GetMaximum()
     min_qcd = h_fakerate_2d_el_qcd.GetMinimum()
-    ply.plot_hist_2d( h_fakerate_2d_el_data_fullerror, options = { "output_name": "frplots/fakerate_2d_el_data.png", "zaxis_range": [min_data/1.5, 1.5*max_data], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation" })
-    ply.plot_hist_2d( h_fakerate_2d_el_qcd           , options = { "output_name": "frplots/fakerate_2d_el_qcd.png" , "zaxis_range": [min_qcd /1.5, 1.5*max_qcd ], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation" })
+    ply.plot_hist_2d( h_fakerate_2d_el_data_fullerror, options = { "output_name": "frplots/fakerate_2d_el_data.png", "zaxis_range": [min_data/1.5, 1.5*max_data], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation", "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"|#eta|", "xaxis_title_offset":1.4, "yaxis_title_offset":1.4 })
+    ply.plot_hist_2d( h_fakerate_2d_el_qcd           , options = { "output_name": "frplots/fakerate_2d_el_qcd.png" , "zaxis_range": [min_qcd /1.5, 1.5*max_qcd ], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation", "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"|#eta|", "xaxis_title_offset":1.4, "yaxis_title_offset":1.4 })
     return h_fakerate_2d_el_data_fullerror, h_fakerate_2d_el_qcd
 
 ###################################################################################################
@@ -482,7 +529,7 @@ def draw_ewkcrnomt_1d_el(): plot("mt", "CR_noMT", "tightel", {"output_name": "fr
 def main():
     of = r.TFile("frplots/fakerate.root", "recreate")
     draw_fakerate_1d_mu()
-    draw_fakerate_1d_el()
+    draw_fakerate_1d_el(nfsinclqcd=True)
     d, q = draw_fakerate_2d_mu()
     of.cd()
     d.Clone("fakerate_mu_data").Write()
@@ -498,11 +545,29 @@ def main():
     draw_ewkcr2_1d_el()
     draw_ewkcr3_1d_mu()
     draw_ewkcr3_1d_el()
-    print nfs_from_CR_mu("")
-    print nfs_from_CR2_mu("")
-    print nfs_from_CR_el("")
-    print nfs_from_CR2_el("")
+    print nfs_from_CR_mu("",False)
+    print nfs_from_CR2_mu("",False)
+    print nfs_from_CR_el("",False)
+    print nfs_from_CR2_el("",False)
+
+def main2():
+    of = r.TFile("frplots/fakerate.root", "recreate")
+    draw_ewkcr2_1d_mu()
+    print nfs_from_CR2_mu("",inclqcd=True)
+    draw_fakerate_1d_mu(nfscheme=nfs_from_CR2_mu, nfsinclqcd=True)
+    d, q = draw_fakerate_2d_mu(nfscheme=nfs_from_CR2_mu, nfsinclqcd=True)
+    d.Clone("fakerate_mu_data").Write()
+    q.Clone("fakerate_mu_qcd").Write()
+    draw_ewkcr2_1d_el()
+    print nfs_from_CR2_el("",inclqcd=True)
+    draw_fakerate_1d_el(nfscheme=nfs_from_CR2_el, nfsinclqcd=True)
+    d, q = draw_fakerate_2d_el(nfscheme=nfs_from_CR2_el, nfsinclqcd=True)
+    d.Clone("fakerate_el_data").Write()
+    q.Clone("fakerate_el_qcd").Write()
+
 
 if __name__ == "__main__":
+    main2()
     #main()
-    draw_fakerate_1d_mu(nfs_from_CR_mu, nfsinclqcd=True)
+    #print nfs_from_CR_mu("", False)
+    #draw_fakerate_1d_mu(nfs_from_CR_mu, nfsinclqcd=False)
