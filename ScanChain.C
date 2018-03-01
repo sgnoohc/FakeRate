@@ -3,7 +3,7 @@
 
 #include "ScanChain.h"
 
-int lepton_id_version = 2;
+int lepton_id_version = 3;
 bool run_tight_id_selection = false;
 
 int nptbins = 4;
@@ -485,6 +485,158 @@ void ScanChain(TChain* chain, TString outputname, TString baseopts, int nEvents 
             }
         }
 
+        if (lepton_id_version == 3)
+        {
+
+            // New muon IDs (http://cern.ch/go/pm6R)
+            if (abs(id()) == 13)
+            {
+                if (run_tight_id_selection)
+                {
+                    passId = passes_VVV_cutbased_fo_noiso()
+                        && fabs(p4().eta()) < 2.4
+                        && fabs(dxyPV()) <= 0.05
+                        && fabs(dZ()) <= 0.1
+                        && ptratio() > 0.9
+                        && fabs(ip3d()) < 0.015;
+                    passFO = passes_VVV_cutbased_fo_noiso()
+                        && fabs(p4().eta()) < 2.4
+                        && fabs(dxyPV()) <= 0.05
+                        && fabs(dZ()) <= 0.1
+                        && ptratio() > 0.65
+                        && fabs(ip3d()) < 0.015;
+                }
+                else
+                {
+                    passId = passes_VVV_cutbased_fo_noiso()
+                        && fabs(p4().eta()) < 2.4
+                        && fabs(dxyPV()) <= 0.05
+                        && fabs(dZ()) <= 0.1
+                        && ptratio() > 0.84
+                        && fabs(ip3d()) < 0.015;
+                    passFO = passes_VVV_cutbased_fo_noiso()
+                        && fabs(p4().eta()) < 2.4
+                        && fabs(dxyPV()) <= 0.05
+                        && fabs(dZ()) <= 0.1
+                        && ptratio() > 0.65
+                        && fabs(ip3d()) < 0.015;
+                }
+            }
+
+            // New electron IDs (http://cern.ch/go/668q)
+            // 
+            // To write down the WPs here (also in the slide): Proposing (including your input):
+            //     for SS:
+            //     Barrel: MVA > 0.941, Irel0.4 < 0.05, IP3D < 0.010
+            //     Endcap: MVA > 0.925, Irel0.4 < 0.07, IP3D < 0.010
+            //     for 3l:
+            //     Barrel: MVA > 0.920, Irel0.4 < 0.10, IP3D < 0.015
+            //     Endcap: MVA > 0.880, Irel0.4 < 0.10, IP3D < 0.015
+            // 
+            if (abs(id()) == 11)
+            {
+                bool isEB = fabs(etaSC()) > 1.479 ? false : true;
+                bool presel = passes_VVV_cutbased_veto_noiso_noip();
+                presel = presel && fabs(dxyPV()) <= 0.05 && fabs(dZ()) <= 0.1 && fabs(ip3d()) / ip3derr() < 4;
+                passId = presel;
+                passFO = presel;
+
+                if (run_tight_id_selection)
+                {
+                    // SS tight
+                    if (isEB)
+                    {
+                        if (!(mva_25ns()     > 0.941)) passId = false;
+                        if (!(ptraio()       > 0.9  )) passId = false;
+                        if (!(fabs(ip3d())   < 0.01 )) passId = false;
+                        if (!(threeChargeAgree()    )) passId = false;
+                    }
+                    else
+                    {
+                        if (!(mva_25ns()     > 0.925)) passId = false;
+                        if (!(ptraio()       > 0.9  )) passId = false;
+                        if (!(fabs(ip3d())   < 0.01 )) passId = false;
+                        if (!(threeChargeAgree()    )) passId = false;
+                    }
+                    if (isEB)
+                    {
+                        if (!(mva_25ns()     > 0.941)) passFO = false;
+                        if (!(ptratio()      > 0.65 )) passFO = false;
+                        if (!(fabs(ip3d())   < 0.01 )) passFO = false;
+                        if (!(threeChargeAgree()    )) passFO = false;
+                    }
+                    else
+                    {
+                        if (!(mva_25ns()     > 0.925)) passFO = false;
+                        if (!(ptratio()      > 0.65 )) passFO = false;
+                        if (!(fabs(ip3d())   < 0.01 )) passFO = false;
+                        if (!(threeChargeAgree()    )) passFO = false;
+                    }
+                }
+                else
+                {
+                    // 3L loose
+                    if (isEB)
+                    {
+                        if (!(mva_25ns()     > 0.920)) passId = false;
+                        if (!(ptratio()      > 0.84 )) passId = false;
+                        if (!(fabs(ip3d())   < 0.015)) passId = false;
+                    }
+                    else
+                    {
+                        if (!(mva_25ns()     > 0.880)) passId = false;
+                        if (!(ptratio()      > 0.84 )) passId = false;
+                        if (!(fabs(ip3d())   < 0.015)) passId = false;
+                    }
+                    if (isEB)
+                    {
+                        if (!(mva_25ns()     > 0.920)) passFO = false;
+                        if (!(ptratio()      > 0.65 )) passFO = false;
+                        if (!(fabs(ip3d())   < 0.015)) passFO = false;
+                    }
+                    else
+                    {
+                        if (!(mva_25ns()     > 0.880)) passFO = false;
+                        if (!(ptratio()      > 0.65 )) passFO = false;
+                        if (!(fabs(ip3d())   < 0.015)) passFO = false;
+                    }
+                }
+
+            }
+
+            // Trigger safe selection
+            if (abs(id()) == 11)
+            {
+                if (passFO || passId)
+                    //if (passFO)
+                {
+                    bool isEB = fabs(etaSC()) > 1.479 ? false : true;
+                    float sIeIe = sigmaIEtaIEta_full5x5();
+                    float hoe = hOverE();
+                    float deta = fabs(dEtaIn());
+                    float dphi = fabs(dPhiIn());
+                    float invep = fabs(1. / ecalEnergy() - 1. / p4().P());
+                    float cut_sIeIe = isEB ? 0.011 : 0.031;
+                    float cut_hoe   = 0.08;
+                    float cut_deta  = 0.01;
+                    float cut_dphi  = isEB ? 0.04 : 0.08;
+                    float cut_invep = 0.01;
+                    bool passHltCuts = (sIeIe < cut_sIeIe && hoe < cut_hoe && deta < cut_deta
+                            && dphi < cut_dphi && invep < cut_invep);
+                    float ePFIso = ecalPFClusterIso() / p4().pt();
+                    float hPFIso = hcalPFClusterIso() / p4().pt();
+                    float trkIso = tkIso() / p4().pt();
+                    float cut_ePFIso = 0.45;
+                    float cut_hPFIso = 0.25;
+                    float cut_trkIso  = 0.2;
+                    passHltCuts = passHltCuts && ePFIso < cut_ePFIso && hPFIso < cut_hPFIso
+                        && trkIso < cut_trkIso;
+                    passFO = passHltCuts && passFO;
+                    passId = passHltCuts && passId;
+                }
+            }
+        }
+
         //---------------------------------------------------------
         // Compute cone correction variable for VVV tight isolation
         //---------------------------------------------------------
@@ -514,6 +666,19 @@ void ScanChain(TChain* chain, TString outputname, TString baseopts, int nEvents 
                 {
                     coneptcorr = std::max(0., RelIso04EAv2() - 0.10);
                 }
+            }
+            if (abs(id()) == 13)
+            {
+                if (run_tight_id_selection) { coneptcorr = max(double(0.), ((0.9/ptratio()) - 1.)); } // PTRATIOMETHOD
+                else                        { coneptcorr = max(double(0.), ((0.84/ptratio()) - 1.)); } // PTRATIOMETHOD
+            }
+        }
+        if (lepton_id_version == 3)
+        {
+            if (abs(id()) == 11)
+            {
+                if (run_tight_id_selection) { coneptcorr = max(double(0.), ((0.9/ptratio()) - 1.)); } // PTRATIOMETHOD
+                else                        { coneptcorr = max(double(0.), ((0.84/ptratio()) - 1.)); } // PTRATIOMETHOD
             }
             if (abs(id()) == 13)
             {
