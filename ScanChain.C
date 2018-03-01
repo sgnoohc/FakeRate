@@ -536,8 +536,9 @@ void ScanChain(TChain* chain, TString outputname, TString baseopts, int nEvents 
             if (abs(id()) == 11)
             {
                 bool isEB = fabs(etaSC()) > 1.479 ? false : true;
-                bool presel = passes_VVV_cutbased_veto_noiso_noip();
-                presel = presel && fabs(dxyPV()) <= 0.05 && fabs(dZ()) <= 0.1 && fabs(ip3d()) / ip3derr() < 4;
+                bool presel = true;
+                //presel = presel && fabs(dxyPV()) <= 0.05 && fabs(dZ()) <= 0.1 && fabs(ip3d()) / ip3derr() < 4;
+                presel = presel && fabs(dxyPV()) <= 0.05 && fabs(dZ()) <= 0.1;
                 passId = presel;
                 passFO = presel;
 
@@ -547,14 +548,14 @@ void ScanChain(TChain* chain, TString outputname, TString baseopts, int nEvents 
                     if (isEB)
                     {
                         if (!(mva_25ns()     > 0.941)) passId = false;
-                        if (!(ptraio()       > 0.9  )) passId = false;
+                        if (!(ptratio()      > 0.9  )) passId = false;
                         if (!(fabs(ip3d())   < 0.01 )) passId = false;
                         if (!(threeChargeAgree()    )) passId = false;
                     }
                     else
                     {
                         if (!(mva_25ns()     > 0.925)) passId = false;
-                        if (!(ptraio()       > 0.9  )) passId = false;
+                        if (!(ptratio()      > 0.9  )) passId = false;
                         if (!(fabs(ip3d())   < 0.01 )) passId = false;
                         if (!(threeChargeAgree()    )) passId = false;
                     }
