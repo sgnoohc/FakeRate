@@ -27,6 +27,7 @@ struct Lepton
     int nvtx;
     float instantLumi;
     LV p4;
+    float eta;
     int id;
     int nFOs_VVV;
     int njets40;

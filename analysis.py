@@ -130,12 +130,19 @@ def plot(varname, region, t, option={}, addqcd=False, nfs=[], syst=""):
 def plot2d(varname, region, t, option={}, addqcd=False, nfs=[], syst=""):
     fulloptions = option
     bkgs = ["wj", "dy", "ttbar", "vv"]
+    categs = ["wj", "dy", "ttbar", "vv", "data"]
     #if addqcd:
     #    bkgs.append("qcd")
     for bkg in bkgs:
         cmd = "h_{b} = p.apply_nf_2d({lep}_{b}(varname, region, syst), nfs)".format(lep=t, b=bkg)
         exec cmd
+    # Special rebinning
     exec "h_data = {lep}_data(varname, region, syst)".format(lep=t)
+    #for c in categs:
+    #    exec "bc = h_{b}.GetBinContent(4, 2)".format(b=c)
+    #    exec "be = h_{b}.GetBinError(4, 2)".format(b=c)
+    #    exec "h_{b}.SetBinContent(4, 3, bc)".format(b=c)
+    #    exec "h_{b}.SetBinError(4, 3, be)".format(b=c)
     h_totalbkg = h_wj.Clone("bkg")
     h_totalbkg.Reset()
     for bkg in bkgs:
@@ -480,6 +487,7 @@ def draw_fakerate_2d_mu(nfscheme=nfs_from_CR_mu, nfsinclqcd=False):
     min_data = h_fakerate_2d_mu_data_fullerror.GetMinimum()
     max_qcd = h_fakerate_2d_mu_qcd.GetMaximum()
     min_qcd = h_fakerate_2d_mu_qcd.GetMinimum()
+    h_fakerate_2d_mu_data_fullerror.Print("all")
     ply.plot_hist_2d( h_fakerate_2d_mu_data_fullerror, options = { "output_name": "frplots/fakerate_2d_mu_data.png", "zaxis_range": [min_data/1.5, 1.5*max_data], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation", "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"|#eta|", "xaxis_title_offset":1.4, "yaxis_title_offset":1.4 })
     ply.plot_hist_2d( h_fakerate_2d_mu_qcd           , options = { "output_name": "frplots/fakerate_2d_mu_qcd.png" , "zaxis_range": [min_qcd /1.5, 1.5*max_qcd ], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation", "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"|#eta|", "xaxis_title_offset":1.4, "yaxis_title_offset":1.4 })
     ply.plot_hist_2d( h_fakerate_2d_mu_data_syst13   , options = { "output_name": "frplots/syst13_fakerate_2d_mu_data.png", "zaxis_range": [min_data/1.5, 1.5*max_data], "zaxis_log": False, "bin_text_smart": False, "us_flag": False, "output_ic": False, "zaxis_noexponents": True, "draw_option_2d": "textecolz", "bin_text_format": ".3f", "xaxis_log": True, "bin_text_size": 1.0, "palette_name": "radiation", "xaxis_label":"#it{p}_{T,cone-corr} [GeV]", "yaxis_label":"|#eta|", "xaxis_title_offset":1.4, "yaxis_title_offset":1.4 })
